@@ -1,39 +1,46 @@
 (function() {
     'use strict';
-    const _exp = 1785436200000;
     const _fb = 'https://PAHAGIMODS.short.gy/yEqWCw';
-    if (Date.now() >= _exp) { window.location.href = _fb; return; }
-
+    
     const style = document.createElement('style');
     style.innerHTML = `
         #mko { position:fixed; inset:0; background:rgba(0,0,0,0.98); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999999; font-family:sans-serif; }
-        .glow-box { border: 2px solid #00f2fe; box-shadow: 0 0 15px #00f2fe; border-radius: 15px; background: #0a0a0a; padding: 25px; text-align: center; }
+        .glow-box { border: 2px solid #00f2fe; box-shadow: 0 0 15px #00f2fe; border-radius: 15px; background: #0a0a0a; padding: 25px; text-align: center; font-weight:bold; }
         .btn { display:block; width:220px; margin:15px auto; padding:12px; background:transparent; color:#fff; border: 2px solid #00f2fe; border-radius:10px; cursor:pointer; font-weight:bold; box-shadow: 0 0 8px #00f2fe; }
-        .ct-val { font-size: 60px; font-weight: bold; color: #fff; margin: 20px 0; }
-        .status-txt { color:#00f2fe; font-weight:bold; letter-spacing:2px; font-size:16px; margin-top: 10px; }
-        .fetch-txt { color:#00ff00; margin-top:15px; font-weight:bold; font-size:14px; }
+        
+        /* Star Burst + Loading Circle Container */
+        .outer-container { position:relative; width:250px; height:250px; display:flex; align-items:center; justify-content:center; }
+        .star-burst { position:absolute; width:100%; height:100%; border: 3px solid #00f2fe; clip-path: polygon(50% 0%, 63% 38%, 100% 38%, 69% 59%, 82% 100%, 50% 75%, 18% 100%, 31% 59%, 0% 38%, 37% 38%); box-shadow: 0 0 20px #00f2fe; animation: rot 10s linear infinite; }
+        .load-circle { position:absolute; width:180px; height:180px; transform:rotate(-90deg); }
+        .num { font-size: 50px; font-weight: bold; color: #fff; }
+        @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .fetch-txt { color:#00ff00; margin-top:15px; font-weight:bold; }
     `;
-    document.head.appendChild(style);
+    document.body.appendChild(style);
 
     const render = (sec) => {
         const mko = document.createElement('div'); mko.id = 'mko';
         mko.innerHTML = `
-            <div class="ct-val" id="ct">${sec}</div>
-            <div class="status-txt" id="stat">REDIRECTING...</div>
+            <div class="outer-container">
+                <div class="star-burst"></div>
+                <svg class="load-circle">
+                    <circle cx="90" cy="90" r="80" stroke="#00f2fe" stroke-width="6" fill="none" stroke-dasharray="502" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
+                </svg>
+                <div class="num" id="ct">${sec}</div>
+            </div>
+            <div id="stat" style="color:#00f2fe; font-weight:bold; letter-spacing:2px; margin-top:20px;">REDIRECTING...</div>
         `;
         document.body.appendChild(mko);
         
         let e = sec;
         const i = setInterval(async () => {
             e--; document.getElementById('ct').innerText = e;
+            document.getElementById('ring').style.strokeDashoffset = 502 * (1 - (e / sec));
             if (e <= 0) {
                 clearInterval(i);
-                // Box ke bahar niche text
                 document.getElementById('stat').innerHTML = `
-                    <div class="glow-box" style="margin-top:20px;">
-                        AINCARD MODS KEY BYPASS<br>BY PAHADI MODS
-                    </div>
-                    <div class="fetch-txt" style="margin-top:20px;">FETCHING...</div>
+                    <div class="glow-box">AINCARD MODS KEY BYPASS<br>BY PAHADI MODS</div>
+                    <div class="fetch-txt">FETCHING...</div>
                 `;
                 setTimeout(async () => {
                     try {
