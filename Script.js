@@ -13,6 +13,21 @@
         }
         .glow-box { border: 2px solid #00f2fe; box-shadow: 0 0 15px #00f2fe; border-radius: 15px; background: #0a0a0a; padding: 25px; text-align: center; font-weight:bold; }
         .btn { display:block; width:220px; margin:15px auto; padding:12px; background:transparent; color:#fff; border: 2px solid #00f2fe; border-radius:10px; cursor:pointer; font-weight:bold; box-shadow: 0 0 8px #00f2fe; }
+        
+        /* 456775.mp4 jaisa Glowing Background Ring */
+        .ring-bg {
+            width: 220px; height: 220px; border-radius: 50%;
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
+            background: conic-gradient(from 0deg, #00f2fe 0%, #000 30%, #000 70%, #00f2fe 100%);
+            animation: rot 3s linear infinite;
+        }
+        .ring-bg::before {
+            content: ""; position: absolute; inset: 10px;
+            background: #000; border-radius: 50%;
+        }
+        @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
         .fetch-txt { color:#00ff00; margin-top:15px; font-weight:bold; }
     `;
     document.body.appendChild(style);
@@ -20,12 +35,11 @@
     const render = (sec) => {
         const mko = document.createElement('div'); mko.id = 'mko';
         mko.innerHTML = `
-            <div style="position:relative; width:220px; height:220px; display:flex; align-items:center; justify-content:center;">
+            <div class="ring-bg">
                 <svg width="220" height="220" style="position:absolute; transform:rotate(-90deg);">
-                    <circle cx="110" cy="110" r="95" stroke="#1a1a1a" stroke-width="12" fill="none"/>
-                    <circle cx="110" cy="110" r="95" stroke="#00f2fe" stroke-width="12" fill="none" stroke-dasharray="597" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
+                    <circle cx="110" cy="110" r="95" stroke="#00f2fe" stroke-width="8" fill="none" stroke-dasharray="597" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
                 </svg>
-                <h1 id="ct" style="color:#fff; font-size:60px; font-weight:bold; text-shadow:0 0 10px #00f2fe;">${sec}</h1>
+                <h1 id="ct" style="color:#fff; font-size:60px; font-weight:bold; z-index:1; text-shadow:0 0 10px #00f2fe;">${sec}</h1>
             </div>
             <div id="stat" style="color:#00f2fe; font-weight:bold; letter-spacing:2px; margin-top:30px; font-size:18px;">REDIRECTING...</div>
         `;
