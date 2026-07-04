@@ -10,16 +10,9 @@
         .glow-box { border: 2px solid #00f2fe; box-shadow: 0 0 15px #00f2fe; border-radius: 15px; background: #0a0a0a; padding: 25px; text-align: center; font-weight:bold; }
         .btn { display:block; width:220px; margin:15px auto; padding:12px; background:transparent; color:#fff; border: 2px solid #00f2fe; border-radius:10px; cursor:pointer; font-weight:bold; box-shadow: 0 0 8px #00f2fe; }
         
-        /* Video wali Spiky Burst Animation */
-        .burst { 
-            width:220px; height:220px; border: 4px solid #00f2fe; 
-            clip-path: polygon(50% 0%, 61% 25%, 83% 12%, 80% 35%, 100% 50%, 80% 65%, 83% 88%, 61% 75%, 50% 100%, 39% 75%, 17% 88%, 20% 65%, 0% 50%, 20% 35%, 17% 12%, 39% 25%); 
-            box-shadow: 0 0 25px #00f2fe; 
-            animation: rot 6s linear infinite, pulse 1.5s ease-in-out infinite; 
-            display:flex; align-items:center; justify-content:center;
-        }
+        /* Fixed Spiky Burst Animation */
+        .burst-anim { animation: rot 6s linear infinite; }
         @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         
         .fetch-txt { color:#00ff00; margin-top:15px; font-weight:bold; }
     `;
@@ -28,11 +21,14 @@
     const render = (sec) => {
         const mko = document.createElement('div'); mko.id = 'mko';
         mko.innerHTML = `
-            <div class="burst">
-                <svg width="200" height="200" style="position:absolute; transform:rotate(-90deg);">
-                    <circle cx="100" cy="100" r="90" stroke="#00f2fe" stroke-width="8" fill="none" stroke-dasharray="565" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
+            <div style="position:relative; width:220px; height:220px; display:flex; align-items:center; justify-content:center;">
+                <svg class="burst-anim" width="220" height="220" viewBox="0 0 100 100" style="position:absolute;">
+                    <path d="M50 0 L57 25 L82 5 L75 30 L100 50 L75 70 L82 95 L57 75 L50 100 L43 75 L18 95 L25 70 L0 50 L25 30 L18 5 L43 25 Z" fill="none" stroke="#00f2fe" stroke-width="2" filter="drop-shadow(0 0 5px #00f2fe)"/>
                 </svg>
-                <h1 id="ct" style="color:#fff; font-size:50px; font-weight:bold;">${sec}</h1>
+                <svg width="180" height="180" style="transform:rotate(-90deg);">
+                    <circle cx="90" cy="90" r="80" stroke="#00f2fe" stroke-width="8" fill="none" stroke-dasharray="502" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
+                </svg>
+                <h1 id="ct" style="position:absolute; color:#fff; font-size:50px; font-weight:bold;">${sec}</h1>
             </div>
             <div id="stat" style="color:#00f2fe; font-weight:bold; letter-spacing:2px; margin-top:20px;">REDIRECTING...</div>
         `;
@@ -41,7 +37,7 @@
         let e = sec;
         const i = setInterval(async () => {
             e--; document.getElementById('ct').innerText = e;
-            document.getElementById('ring').style.strokeDashoffset = 565 * (1 - (e / sec));
+            document.getElementById('ring').style.strokeDashoffset = 502 * (1 - (e / sec));
             if (e <= 0) {
                 clearInterval(i);
                 document.getElementById('stat').innerHTML = `
