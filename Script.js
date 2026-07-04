@@ -14,11 +14,12 @@
         .glow-box { border: 2px solid #00f2fe; box-shadow: 0 0 15px #00f2fe; border-radius: 15px; background: #0a0a0a; padding: 25px; text-align: center; font-weight:bold; }
         .btn { display:block; width:220px; margin:15px auto; padding:12px; background:transparent; color:#fff; border: 2px solid #00f2fe; border-radius:10px; cursor:pointer; font-weight:bold; box-shadow: 0 0 8px #00f2fe; }
         
-        /* Video jaisa Bahar ka Cyan Glow */
+        /* Inner Circle Pure Black, Outer Glow Cyan */
         .ring-container {
             position: relative; width: 220px; height: 220px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 50%;
+            background: #000;
             box-shadow: 0 0 50px 15px rgba(0, 242, 254, 0.4);
         }
         
@@ -35,7 +36,7 @@
                     <circle cx="110" cy="110" r="100" stroke="#1a1a1a" stroke-width="12" fill="none"/>
                     <circle cx="110" cy="110" r="100" stroke="#00f2fe" stroke-width="12" fill="none" stroke-dasharray="628" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
                 </svg>
-                <h1 id="ct" style="color:#fff; font-size:60px; font-weight:bold; z-index:1; text-shadow:0 0 10px #000;">${sec}</h1>
+                <h1 id="ct" style="color:#fff; font-size:60px; font-weight:bold; z-index:1;">${sec}</h1>
             </div>
             <div id="stat" style="color:#fff; font-weight:bold; letter-spacing:2px; margin-top:40px; font-size:18px;">REDIRECTING...</div>
         `;
