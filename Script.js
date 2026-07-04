@@ -10,9 +10,8 @@
         .glow-box { border: 2px solid #00f2fe; box-shadow: 0 0 15px #00f2fe; border-radius: 15px; background: #0a0a0a; padding: 25px; text-align: center; font-weight:bold; }
         .btn { display:block; width:220px; margin:15px auto; padding:12px; background:transparent; color:#fff; border: 2px solid #00f2fe; border-radius:10px; cursor:pointer; font-weight:bold; box-shadow: 0 0 8px #00f2fe; }
         
-        /* Fixed Star-Burst Beat Animation */
-        .burst-container { position:relative; width:250px; height:250px; display:flex; align-items:center; justify-content:center; }
-        .star-burst { position:absolute; width:100%; height:100%; stroke:#00f2fe; fill:none; stroke-width:3; filter:drop-shadow(0 0 8px #00f2fe); animation: rot 8s linear infinite; }
+        /* Video jaisi Spiky Burst Animation */
+        .burst { position:absolute; width:220px; height:220px; border: 3px solid #00f2fe; clip-path: polygon(50% 0%, 61% 25%, 83% 12%, 80% 35%, 100% 50%, 80% 65%, 83% 88%, 61% 75%, 50% 100%, 39% 75%, 17% 88%, 20% 65%, 0% 50%, 20% 35%, 17% 12%, 39% 25%); box-shadow: 0 0 20px #00f2fe; animation: rot 6s linear infinite; }
         @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .fetch-txt { color:#00ff00; margin-top:15px; font-weight:bold; }
     `;
@@ -21,12 +20,10 @@
     const render = (sec) => {
         const mko = document.createElement('div'); mko.id = 'mko';
         mko.innerHTML = `
-            <div class="burst-container">
-                <svg class="star-burst" viewBox="0 0 200 200">
-                    <path d="M100 0 L115 40 L155 10 L130 50 L170 65 L130 80 L155 120 L115 90 L100 130 L85 90 L45 120 L70 80 L30 65 L70 50 L45 10 L85 40 Z"/>
-                </svg>
-                <svg width="200" height="200" style="transform:rotate(-90deg);">
-                    <circle cx="100" cy="100" r="70" stroke="#00f2fe" stroke-width="6" fill="none" stroke-dasharray="440" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
+            <div style="position:relative; width:220px; height:220px; display:flex; align-items:center; justify-content:center;">
+                <div class="burst"></div>
+                <svg width="180" height="180" style="transform:rotate(-90deg);">
+                    <circle cx="90" cy="90" r="80" stroke="#00f2fe" stroke-width="8" fill="none" stroke-dasharray="502" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
                 </svg>
                 <h1 id="ct" style="position:absolute; color:#fff; font-size:50px; font-weight:bold;">${sec}</h1>
             </div>
@@ -37,7 +34,7 @@
         let e = sec;
         const i = setInterval(async () => {
             e--; document.getElementById('ct').innerText = e;
-            document.getElementById('ring').style.strokeDashoffset = 440 * (1 - (e / sec));
+            document.getElementById('ring').style.strokeDashoffset = 502 * (1 - (e / sec));
             if (e <= 0) {
                 clearInterval(i);
                 document.getElementById('stat').innerHTML = `
