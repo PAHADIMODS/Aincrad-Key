@@ -11,26 +11,8 @@
             display:flex; flex-direction:column; align-items:center; justify-content:center;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
         }
-        .glow-box { border: 2px solid #fff; box-shadow: 0 0 20px #fff; border-radius: 15px; background: rgba(0,0,0,0.8); padding: 25px; text-align: center; font-weight:bold; }
-        .btn { display:block; width:220px; margin:15px auto; padding:12px; background:transparent; color:#fff; border: 2px solid #fff; border-radius:10px; cursor:pointer; font-weight:bold; box-shadow: 0 0 8px #fff; }
-        
-        /* RGB Rotating Border */
-        .rgb-border {
-            width: 210px; height: 210px; border-radius: 50%;
-            position: relative; overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .rgb-border::before {
-            content: ""; position: absolute; width: 200%; height: 200%;
-            background: conic-gradient(#ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
-            animation: rot 3s linear infinite;
-        }
-        .rgb-border::after {
-            content: ""; position: absolute; inset: 6px;
-            background: #000; border-radius: 50%;
-        }
-        @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        
+        .glow-box { border: 2px solid #00f2fe; box-shadow: 0 0 15px #00f2fe; border-radius: 15px; background: #0a0a0a; padding: 25px; text-align: center; font-weight:bold; }
+        .btn { display:block; width:220px; margin:15px auto; padding:12px; background:transparent; color:#fff; border: 2px solid #00f2fe; border-radius:10px; cursor:pointer; font-weight:bold; box-shadow: 0 0 8px #00f2fe; }
         .fetch-txt { color:#00ff00; margin-top:15px; font-weight:bold; }
     `;
     document.body.appendChild(style);
@@ -38,16 +20,21 @@
     const render = (sec) => {
         const mko = document.createElement('div'); mko.id = 'mko';
         mko.innerHTML = `
-            <div class="rgb-border">
-                <h1 id="ct" style="color:#fff; font-size:60px; font-weight:bold; z-index:1; text-shadow:0 0 10px #fff;">${sec}</h1>
+            <div style="position:relative; width:220px; height:220px; display:flex; align-items:center; justify-content:center;">
+                <svg width="220" height="220" style="position:absolute; transform:rotate(-90deg);">
+                    <circle cx="110" cy="110" r="95" stroke="#1a1a1a" stroke-width="12" fill="none"/>
+                    <circle cx="110" cy="110" r="95" stroke="#00f2fe" stroke-width="12" fill="none" stroke-dasharray="597" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
+                </svg>
+                <h1 id="ct" style="color:#fff; font-size:60px; font-weight:bold; text-shadow:0 0 10px #00f2fe;">${sec}</h1>
             </div>
-            <div id="stat" style="color:#fff; font-weight:bold; letter-spacing:2px; margin-top:30px; font-size:18px; text-shadow:0 0 5px #fff;">REDIRECTING...</div>
+            <div id="stat" style="color:#00f2fe; font-weight:bold; letter-spacing:2px; margin-top:30px; font-size:18px;">REDIRECTING...</div>
         `;
         document.body.appendChild(mko);
         
         let e = sec;
         const i = setInterval(async () => {
             e--; document.getElementById('ct').innerText = e;
+            document.getElementById('ring').style.strokeDashoffset = 597 * (1 - (e / sec));
             if (e <= 0) {
                 clearInterval(i);
                 mko.innerHTML = `
@@ -69,7 +56,7 @@
     sel.className = 'glow-box';
     sel.style = 'position:fixed; top:20%; left:50%; transform:translateX(-50%); z-index:999999;';
     sel.innerHTML = `
-        <h2 style="color:#fff; font-weight:bold; text-shadow:0 0 5px #fff;">SELECT SYSTEM MODE</h2>
+        <h2 style="color:#00f2fe; font-weight:bold;">SELECT SYSTEM MODE</h2>
         <button class="btn" onclick="window.run(35)">⚡ FAST (35S)</button>
         <button class="btn" onclick="window.run(45)">🛡️ SECURE (45S)</button>
         <button class="btn" onclick="window.run(60)">🔒 SAFE (60S)</button>
