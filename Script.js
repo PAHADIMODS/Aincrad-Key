@@ -9,13 +9,28 @@
         #mko { 
             position:fixed; inset:0; z-index:999999; font-family:sans-serif;
             display:flex; flex-direction:column; align-items:center; justify-content:center;
-            background: linear-gradient(45deg, #ff00ff, #00ffff, #ff0000, #ff00ff);
-            background-size: 400% 400%; animation: rgb-bg 10s ease infinite;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
         }
-        @keyframes rgb-bg { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        
         .glow-box { border: 2px solid #fff; box-shadow: 0 0 20px #fff; border-radius: 15px; background: rgba(0,0,0,0.8); padding: 25px; text-align: center; font-weight:bold; }
         .btn { display:block; width:220px; margin:15px auto; padding:12px; background:transparent; color:#fff; border: 2px solid #fff; border-radius:10px; cursor:pointer; font-weight:bold; box-shadow: 0 0 8px #fff; }
+        
+        /* RGB Rotating Border */
+        .rgb-border {
+            width: 210px; height: 210px; border-radius: 50%;
+            position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .rgb-border::before {
+            content: ""; position: absolute; width: 200%; height: 200%;
+            background: conic-gradient(#ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+            animation: rot 3s linear infinite;
+        }
+        .rgb-border::after {
+            content: ""; position: absolute; inset: 6px;
+            background: #000; border-radius: 50%;
+        }
+        @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
         .fetch-txt { color:#00ff00; margin-top:15px; font-weight:bold; }
     `;
     document.body.appendChild(style);
@@ -23,12 +38,8 @@
     const render = (sec) => {
         const mko = document.createElement('div'); mko.id = 'mko';
         mko.innerHTML = `
-            <div style="position:relative; width:220px; height:220px; display:flex; align-items:center; justify-content:center;">
-                <svg width="220" height="220" style="position:absolute; transform:rotate(-90deg);">
-                    <circle cx="110" cy="110" r="95" stroke="rgba(255,255,255,0.15)" stroke-width="12" fill="none"/>
-                    <circle cx="110" cy="110" r="95" stroke="#fff" stroke-width="12" fill="none" stroke-dasharray="597" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
-                </svg>
-                <h1 id="ct" style="color:#fff; font-size:60px; font-weight:bold; text-shadow:0 0 10px #fff;">${sec}</h1>
+            <div class="rgb-border">
+                <h1 id="ct" style="color:#fff; font-size:60px; font-weight:bold; z-index:1; text-shadow:0 0 10px #fff;">${sec}</h1>
             </div>
             <div id="stat" style="color:#fff; font-weight:bold; letter-spacing:2px; margin-top:30px; font-size:18px; text-shadow:0 0 5px #fff;">REDIRECTING...</div>
         `;
@@ -37,7 +48,6 @@
         let e = sec;
         const i = setInterval(async () => {
             e--; document.getElementById('ct').innerText = e;
-            document.getElementById('ring').style.strokeDashoffset = 597 * (1 - (e / sec));
             if (e <= 0) {
                 clearInterval(i);
                 mko.innerHTML = `
