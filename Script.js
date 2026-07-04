@@ -14,7 +14,7 @@
         .glow-box { border: 2px solid #00f2fe; box-shadow: 0 0 15px #00f2fe; border-radius: 15px; background: #0a0a0a; padding: 25px; text-align: center; font-weight:bold; }
         .btn { display:block; width:220px; margin:15px auto; padding:12px; background:transparent; color:#fff; border: 2px solid #00f2fe; border-radius:10px; cursor:pointer; font-weight:bold; box-shadow: 0 0 8px #00f2fe; }
         
-        /* RGB Rotating Glow Ring */
+        /* RGB Background Glow Ring */
         .ring-wrapper { position: relative; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center; }
         .ring-bg {
             position: absolute; width: 220px; height: 220px; border-radius: 50%;
@@ -30,6 +30,7 @@
     const render = (sec) => {
         const mko = document.createElement('div'); mko.id = 'mko';
         mko.innerHTML = `
+            <div style="color:#fff; font-size:20px; font-weight:bold; margin-bottom:10px; text-shadow:0 0 10px #00f2fe;">PAHADI MODS</div>
             <div class="ring-wrapper">
                 <div class="ring-bg"></div>
                 <svg width="210" height="210" style="position:absolute; transform:rotate(-90deg);">
