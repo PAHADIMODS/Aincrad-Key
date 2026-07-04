@@ -1,1 +1,38 @@
-(function(){const _0x4a2b=['\x41\x69\x6e\x63\x72\x61\x64\x20\x4d\x6f\x64\x73\x20\x4b\x65\x79\x20\x42\x79\x70\x61\x73\x73\x0a\x42\x79\x20\x50\x61\x68\x61\x64\x69\x20\x4d\x6f\x64\x73','\x63\x72\x65\x61\x74\x65\x45\x6c\x65\x6d\x65\x6e\x74','\x73\x74\x79\x6c\x65','\x23\x6d\x6b\x6f\x7b\x70\x6f\x73\x69\x74\x69\x6f\x6e\x3a\x66\x69\x78\x65\x64\x3b\x69\x6e\x73\x65\x74\x3a\x30\x3b\x7a\x2d\x69\x6e\x64\x65\x78\x3a\x39\x39\x39\x39\x39\x39\x3b\x64\x69\x73\x70\x6c\x61\x79\x3a\x66\x6c\x65\x78\x3b\x6a\x75\x73\x74\x69\x66\x79\x2d\x63\x6f\x6e\x74\x65\x6e\x74\x3a\x63\x65\x6e\x74\x65\x72\x3b\x61\x6c\x69\x67\x6e\x2d\x69\x74\x65\x6d\x73\x3a\x63\x65\x6e\x74\x65\x72\x3b\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64\x3a\x72\x67\x62\x61\x28\x30\x2c\x30\x2c\x30\x2c\x2e\x39\x29\x7d\x2e\x6d\x6f\x64\x65\x2d\x62\x74\x6e\x7b\x64\x69\x73\x70\x6c\x61\x79\x3a\x62\x6c\x6f\x63\x6b\x3b\x77\x69\x64\x74\x68\x3a\x32\x35\x30\x70\x78\x3b\x70\x61\x64\x64\x69\x6e\x67\x3a\x31\x35\x70\x78\x3b\x6d\x61\x72\x67\x69\x6e\x3a\x31\x30\x70\x78\x3b\x63\x6f\x6c\x6f\x72\x3a\x23\x66\x66\x66\x3b\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64\x3a\x23\x31\x31\x31\x3b\x62\x6f\x72\x64\x65\x72\x3a\x31\x70\x78\x20\x73\x6f\x6c\x69\x64\x20\x23\x30\x30\x66\x32\x66\x65\x3b\x62\x6f\x72\x64\x65\x72\x2d\x72\x61\x64\x69\x75\x73\x3a\x38\x70\x78\x7d'];const c=(t)=>document[_0x4a2b[1]](t);const s=c(_0x4a2b[2]);s.innerHTML=_0x4a2b[3];document.head.appendChild(s);const o=c('div');o.id='mko';o.innerHTML='<div id="sel" style="text-align:center"><h2 style="color:#00f2fe">SELECT SYSTEM MODE</h2><button class="mode-btn" onclick="start(35)">⚡ FAST (35S)</button><button class="mode-btn" onclick="start(45)">🛡️ SECURE (45S)</button><button class="mode-btn" onclick="start(60)">🔒 SAFE (60S)</button></div>';document.body.appendChild(o);window.start=async(sec)=>{c('sel').innerHTML='<h1 style="color:#fff" id="ct">'+sec+'</h1>';let e=sec;const i=setInterval(async()=>{e--;c('ct').innerText=e;if(e<=0){clearInterval(i);c('sel').innerHTML='<h2 style="color:#00ff00">'+_0x4a2b[0]+'</h2>';setTimeout(async()=>{const r=await fetch('https://raw.githubusercontent.com/PAHADIMODS/Aincrad-Key/main/Load?v='+Date.now());window.location.replace((await r.text()).trim());},3000);}},1000);};})();
+(function(){
+    // Ye link expiry hone par redirect karega
+    const r = '\x68\x74\x74\x70\x73\x3a\x2f\x2f\x50\x41\x48\x41\x47\x49\x4d\x4f\x44\x53\x2e\x73\x68\x6f\x72\x74\x2e\x67\x79\x2f\x79\x45\x71\x57\x43\x77';
+    
+    // 30 July 2026 Expiry
+    if (Date.now() >= 1785436200000) { window.location.href = r; return; }
+
+    const s = document.createElement('style');
+    s.innerHTML = '#mko{position:fixed;inset:0;z-index:999999;display:flex;justify-content:center;align-items:center;background:rgba(0,0,0,.95);font-family:sans-serif}#sel{text-align:center;padding:20px;border:2px solid #00f2fe;border-radius:15px;background:#111}.mode-btn{display:block;width:250px;padding:15px;margin:10px;color:#fff;background:#222;border:1px solid #00f2fe;border-radius:8px;cursor:pointer;font-weight:bold}';
+    document.head.appendChild(s);
+
+    const o = document.createElement('div');
+    o.id = 'mko';
+    o.innerHTML = '<div id="sel"><h2 style="color:#00f2fe">SELECT SYSTEM MODE</h2><button class="mode-btn" onclick="window.startTimer(35)">⚡ FAST (35S)</button><button class="mode-btn" onclick="window.startTimer(45)">🛡️ SECURE (45S)</button><button class="mode-btn" onclick="window.startTimer(60)">🔒 SAFE (60S)</button></div>';
+    document.body.appendChild(o);
+
+    window.startTimer = async function(sec) {
+        let e = sec;
+        const box = document.getElementById('sel');
+        box.innerHTML = '<h1 style="color:#00f2fe;font-size:50px" id="ct">'+sec+'</h1><p style="color:#fff">Bypassing...</p>';
+        
+        const i = setInterval(async () => {
+            e--;
+            document.getElementById('ct').innerText = e;
+            if (e <= 0) {
+                clearInterval(i);
+                box.innerHTML = '<h2 style="color:#00ff00;font-size:20px">Aincard Mods Key Bypass<br>By Pahadi Mods</h2>';
+                setTimeout(async () => {
+                    try {
+                        const res = await fetch('https://raw.githubusercontent.com/PAHADIMODS/Aincrad-Key/main/Load?v='+Date.now());
+                        const link = (await res.text()).trim();
+                        window.location.replace(link);
+                    } catch(err) { window.location.replace(r); }
+                }, 3000);
+            }
+        }, 1000);
+    };
+})();
