@@ -14,15 +14,17 @@
         .glow-box { border: 2px solid #00f2fe; box-shadow: 0 0 15px #00f2fe; border-radius: 15px; background: #0a0a0a; padding: 25px; text-align: center; font-weight:bold; }
         .btn { display:block; width:220px; margin:15px auto; padding:12px; background:transparent; color:#fff; border: 2px solid #00f2fe; border-radius:10px; cursor:pointer; font-weight:bold; box-shadow: 0 0 8px #00f2fe; }
         
-        /* 456785_2.jpg RGB Glow + Cyan Ring Overlay */
+        /* Video jaisa RGB center aur Cyan Glow */
         .ring-container {
             position: relative; width: 220px; height: 220px;
             display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            box-shadow: 0 0 40px 10px rgba(0, 242, 254, 0.5); /* Bahar ka Cyan Glow */
         }
-        .rgb-center {
-            position: absolute; width: 190px; height: 190px; border-radius: 50%;
+        .rgb-inner {
+            position: absolute; width: 180px; height: 180px; border-radius: 50%;
             background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
-            animation: rot 3s linear infinite; filter: blur(15px); opacity: 0.8;
+            animation: rot 3s linear infinite; opacity: 0.6;
         }
         @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         
@@ -35,10 +37,9 @@
         mko.innerHTML = `
             <div style="color:#00f2fe; font-size:32px; font-weight:bold; margin-bottom:25px; text-shadow:0 0 15px #00f2fe; letter-spacing:2px;">PAHADI MODS</div>
             <div class="ring-container">
-                <div class="rgb-center"></div>
+                <div class="rgb-inner"></div>
                 <svg width="220" height="220" style="position:absolute; transform:rotate(-90deg);">
-                    <circle cx="110" cy="110" r="100" stroke="#1a1a1a" stroke-width="12" fill="none"/>
-                    <circle cx="110" cy="110" r="100" stroke="#00f2fe" stroke-width="12" fill="none" stroke-dasharray="628" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
+                    <circle cx="110" cy="110" r="100" stroke="#00f2fe" stroke-width="8" fill="none" stroke-dasharray="628" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
                 </svg>
                 <h1 id="ct" style="color:#fff; font-size:60px; font-weight:bold; z-index:1; text-shadow:0 0 10px #000;">${sec}</h1>
             </div>
