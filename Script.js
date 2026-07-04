@@ -1,18 +1,15 @@
 (function() {
     'use strict';
+    const _exp = 1785436200000;
     const _fb = 'https://PAHAGIMODS.short.gy/yEqWCw';
-    
+    if (Date.now() >= _exp) { window.location.href = _fb; return; }
+
     const style = document.createElement('style');
     style.innerHTML = `
         #mko { position:fixed; inset:0; background:rgba(0,0,0,0.98); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999999; font-family:sans-serif; }
         .glow-box { border: 2px solid #00f2fe; box-shadow: 0 0 15px #00f2fe; border-radius: 15px; background: #0a0a0a; padding: 25px; text-align: center; font-weight:bold; }
         .btn { display:block; width:220px; margin:15px auto; padding:12px; background:transparent; color:#fff; border: 2px solid #00f2fe; border-radius:10px; cursor:pointer; font-weight:bold; box-shadow: 0 0 8px #00f2fe; }
-        
-        /* Star Burst + Loading Circle Container */
-        .outer-container { position:relative; width:250px; height:250px; display:flex; align-items:center; justify-content:center; }
-        .star-burst { position:absolute; width:100%; height:100%; border: 3px solid #00f2fe; clip-path: polygon(50% 0%, 63% 38%, 100% 38%, 69% 59%, 82% 100%, 50% 75%, 18% 100%, 31% 59%, 0% 38%, 37% 38%); box-shadow: 0 0 20px #00f2fe; animation: rot 10s linear infinite; }
-        .load-circle { position:absolute; width:180px; height:180px; transform:rotate(-90deg); }
-        .num { font-size: 50px; font-weight: bold; color: #fff; }
+        .star-burst { position:absolute; width:220px; height:220px; border: 3px solid #00f2fe; clip-path: polygon(50% 0%, 63% 38%, 100% 38%, 69% 59%, 82% 100%, 50% 75%, 18% 100%, 31% 59%, 0% 38%, 37% 38%); box-shadow: 0 0 20px #00f2fe; animation: rot 8s linear infinite; }
         @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .fetch-txt { color:#00ff00; margin-top:15px; font-weight:bold; }
     `;
@@ -21,12 +18,12 @@
     const render = (sec) => {
         const mko = document.createElement('div'); mko.id = 'mko';
         mko.innerHTML = `
-            <div class="outer-container">
+            <div style="position:relative; width:220px; height:220px; display:flex; align-items:center; justify-content:center;">
                 <div class="star-burst"></div>
-                <svg class="load-circle">
+                <svg width="180" height="180" style="transform:rotate(-90deg);">
                     <circle cx="90" cy="90" r="80" stroke="#00f2fe" stroke-width="6" fill="none" stroke-dasharray="502" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
                 </svg>
-                <div class="num" id="ct">${sec}</div>
+                <h1 id="ct" style="position:absolute; color:#fff; font-size:50px; font-weight:bold;">${sec}</h1>
             </div>
             <div id="stat" style="color:#00f2fe; font-weight:bold; letter-spacing:2px; margin-top:20px;">REDIRECTING...</div>
         `;
