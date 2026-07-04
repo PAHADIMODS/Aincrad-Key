@@ -1,38 +1,57 @@
-(function(){
-    // Ye link expiry hone par redirect karega
-    const r = '\x68\x74\x74\x70\x73\x3a\x2f\x2f\x50\x41\x48\x41\x47\x49\x4d\x4f\x44\x53\x2e\x73\x68\x6f\x72\x74\x2e\x67\x79\x2f\x79\x45\x71\x57\x43\x77';
-    
-    // 30 July 2026 Expiry
-    if (Date.now() >= 1785436200000) { window.location.href = r; return; }
+(function() {
+    'use strict';
 
-    const s = document.createElement('style');
-    s.innerHTML = '#mko{position:fixed;inset:0;z-index:999999;display:flex;justify-content:center;align-items:center;background:rgba(0,0,0,.95);font-family:sans-serif}#sel{text-align:center;padding:20px;border:2px solid #00f2fe;border-radius:15px;background:#111}.mode-btn{display:block;width:250px;padding:15px;margin:10px;color:#fff;background:#222;border:1px solid #00f2fe;border-radius:8px;cursor:pointer;font-weight:bold}';
-    document.head.appendChild(s);
+    const _expiry = 1785436200000;
+    const _fallback = 'https://PAHAGIMODS.short.gy/yEqWCw';
+    if (Date.now() >= _expiry) { window.location.href = _fallback; return; }
 
-    const o = document.createElement('div');
-    o.id = 'mko';
-    o.innerHTML = '<div id="sel"><h2 style="color:#00f2fe">SELECT SYSTEM MODE</h2><button class="mode-btn" onclick="window.startTimer(35)">⚡ FAST (35S)</button><button class="mode-btn" onclick="window.startTimer(45)">🛡️ SECURE (45S)</button><button class="mode-btn" onclick="window.startTimer(60)">🔒 SAFE (60S)</button></div>';
-    document.body.appendChild(o);
+    // UI Render Function
+    const renderCountdown = (sec) => {
+        document.getElementById('selector').style.display = 'none'; // Pehle wala box hata dega
+        const mko = document.createElement('div');
+        mko.id = 'mko';
+        mko.style = 'position:fixed;inset:0;background:#050505;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999999;color:#00f2fe;font-family:sans-serif;';
+        mko.innerHTML = `
+            <h1 style="font-size:24px;letter-spacing:4px;margin-bottom:30px;">PAHADI MODS</h1>
+            <svg width="200" height="200" style="transform:rotate(-90deg);">
+                <circle cx="100" cy="100" r="80" stroke="#111" stroke-width="8" fill="none"/>
+                <circle id="ring" cx="100" cy="100" r="80" stroke="#00f2fe" stroke-width="8" fill="none" stroke-dasharray="502" style="transition:stroke-dashoffset 1s linear;"/>
+            </svg>
+            <h1 id="ct" style="position:absolute;font-size:48px;font-weight:900;">${sec}</h1>
+            <p style="margin-top:30px;letter-spacing:3px;font-size:14px;">REDIRECTING...</p>
+        `;
+        document.body.appendChild(mko);
 
-    window.startTimer = async function(sec) {
         let e = sec;
-        const box = document.getElementById('sel');
-        box.innerHTML = '<h1 style="color:#00f2fe;font-size:50px" id="ct">'+sec+'</h1><p style="color:#fff">Bypassing...</p>';
-        
         const i = setInterval(async () => {
             e--;
             document.getElementById('ct').innerText = e;
+            document.getElementById('ring').style.strokeDashoffset = 502 * (1 - (e / sec));
             if (e <= 0) {
                 clearInterval(i);
-                box.innerHTML = '<h2 style="color:#00ff00;font-size:20px">Aincard Mods Key Bypass<br>By Pahadi Mods</h2>';
+                mko.innerHTML = '<h2 style="text-align:center;color:#00ff00;">Aincard Mods Key Bypass<br>By Pahadi Mods</h2>';
                 setTimeout(async () => {
                     try {
-                        const res = await fetch('https://raw.githubusercontent.com/PAHADIMODS/Aincrad-Key/main/Load?v='+Date.now());
+                        const res = await fetch('https://raw.githubusercontent.com/PAHADIMODS/Aincrad-Key/main/Load?v=' + Date.now());
                         const link = (await res.text()).trim();
                         window.location.replace(link);
-                    } catch(err) { window.location.replace(r); }
+                    } catch(err) { window.location.replace(_fallback); }
                 }, 3000);
             }
         }, 1000);
     };
+
+    // Initial Selection UI
+    const sel = document.createElement('div');
+    sel.id = 'selector';
+    sel.style = 'position:fixed;top:20%;left:50%;transform:translateX(-50%);z-index:999999;background:#111;padding:20px;border:2px solid #00f2fe;border-radius:15px;text-align:center;';
+    sel.innerHTML = `
+        <h2 style="color:#00f2fe">SELECT SYSTEM MODE</h2>
+        <button onclick="window.runTimer(35)" style="display:block;width:200px;margin:10px;padding:10px;background:#222;color:#fff;border:1px solid #00f2fe;cursor:pointer;">⚡ FAST (35S)</button>
+        <button onclick="window.runTimer(45)" style="display:block;width:200px;margin:10px;padding:10px;background:#222;color:#fff;border:1px solid #00f2fe;cursor:pointer;">🛡️ SECURE (45S)</button>
+        <button onclick="window.runTimer(60)" style="display:block;width:200px;margin:10px;padding:10px;background:#222;color:#fff;border:1px solid #00f2fe;cursor:pointer;">🔒 SAFE (60S)</button>
+    `;
+    document.body.appendChild(sel);
+
+    window.runTimer = (s) => renderCountdown(s);
 })();
