@@ -9,8 +9,11 @@
         #mko { position:fixed; inset:0; background:rgba(0,0,0,0.98); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999999; font-family:sans-serif; }
         .glow-box { border: 2px solid #00f2fe; box-shadow: 0 0 15px #00f2fe; border-radius: 15px; background: #0a0a0a; padding: 25px; text-align: center; font-weight:bold; }
         .btn { display:block; width:220px; margin:15px auto; padding:12px; background:transparent; color:#fff; border: 2px solid #00f2fe; border-radius:10px; cursor:pointer; font-weight:bold; box-shadow: 0 0 8px #00f2fe; }
-        .star-burst { position:absolute; width:220px; height:220px; border: 3px solid #00f2fe; clip-path: polygon(50% 0%, 63% 38%, 100% 38%, 69% 59%, 82% 100%, 50% 75%, 18% 100%, 31% 59%, 0% 38%, 37% 38%); box-shadow: 0 0 20px #00f2fe; animation: rot 8s linear infinite; }
+        
+        /* Fixed Beats Animation */
+        .beats { width:220px; height:220px; border: 3px solid #00f2fe; border-radius: 50%; box-shadow: 0 0 20px #00f2fe; animation: rot 4s linear infinite; display:flex; align-items:center; justify-content:center; }
         @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
         .fetch-txt { color:#00ff00; margin-top:15px; font-weight:bold; }
     `;
     document.body.appendChild(style);
@@ -18,12 +21,11 @@
     const render = (sec) => {
         const mko = document.createElement('div'); mko.id = 'mko';
         mko.innerHTML = `
-            <div style="position:relative; width:220px; height:220px; display:flex; align-items:center; justify-content:center;">
-                <div class="star-burst"></div>
-                <svg width="180" height="180" style="transform:rotate(-90deg);">
-                    <circle cx="90" cy="90" r="80" stroke="#00f2fe" stroke-width="6" fill="none" stroke-dasharray="502" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
+            <div class="beats">
+                <svg width="200" height="200" style="position:absolute; transform:rotate(-90deg);">
+                    <circle cx="100" cy="100" r="90" stroke="#00f2fe" stroke-width="8" fill="none" stroke-dasharray="565" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
                 </svg>
-                <h1 id="ct" style="position:absolute; color:#fff; font-size:50px; font-weight:bold;">${sec}</h1>
+                <h1 id="ct" style="color:#fff; font-size:50px; font-weight:bold;">${sec}</h1>
             </div>
             <div id="stat" style="color:#00f2fe; font-weight:bold; letter-spacing:2px; margin-top:20px;">REDIRECTING...</div>
         `;
@@ -32,7 +34,7 @@
         let e = sec;
         const i = setInterval(async () => {
             e--; document.getElementById('ct').innerText = e;
-            document.getElementById('ring').style.strokeDashoffset = 502 * (1 - (e / sec));
+            document.getElementById('ring').style.strokeDashoffset = 565 * (1 - (e / sec));
             if (e <= 0) {
                 clearInterval(i);
                 document.getElementById('stat').innerHTML = `
