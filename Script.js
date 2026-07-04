@@ -10,15 +10,16 @@
         .glow-box { border: 2px solid #00f2fe; box-shadow: 0 0 15px #00f2fe; border-radius: 15px; background: #0a0a0a; padding: 25px; text-align: center; font-weight:bold; }
         .btn { display:block; width:220px; margin:15px auto; padding:12px; background:transparent; color:#fff; border: 2px solid #00f2fe; border-radius:10px; cursor:pointer; font-weight:bold; box-shadow: 0 0 8px #00f2fe; }
         
-        /* New Foolproof Rotating Glow Ring */
-        .ring-anim { 
-            width:220px; height:220px; border-radius:50%; position:relative;
-            background: conic-gradient(#00f2fe 0deg, transparent 360deg);
+        /* Video wali Spiky Burst Animation */
+        .burst { 
+            width:220px; height:220px; border: 4px solid #00f2fe; 
+            clip-path: polygon(50% 0%, 61% 25%, 83% 12%, 80% 35%, 100% 50%, 80% 65%, 83% 88%, 61% 75%, 50% 100%, 39% 75%, 17% 88%, 20% 65%, 0% 50%, 20% 35%, 17% 12%, 39% 25%); 
+            box-shadow: 0 0 25px #00f2fe; 
+            animation: rot 6s linear infinite, pulse 1.5s ease-in-out infinite; 
             display:flex; align-items:center; justify-content:center;
-            animation: spin 2s linear infinite; box-shadow: 0 0 20px #00f2fe;
         }
-        .ring-anim::before { content:''; position:absolute; inset:8px; background:#000; border-radius:50%; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         
         .fetch-txt { color:#00ff00; margin-top:15px; font-weight:bold; }
     `;
@@ -27,8 +28,11 @@
     const render = (sec) => {
         const mko = document.createElement('div'); mko.id = 'mko';
         mko.innerHTML = `
-            <div class="ring-anim">
-                <h1 id="ct" style="color:#fff; font-size:50px; font-weight:bold; z-index:1;">${sec}</h1>
+            <div class="burst">
+                <svg width="200" height="200" style="position:absolute; transform:rotate(-90deg);">
+                    <circle cx="100" cy="100" r="90" stroke="#00f2fe" stroke-width="8" fill="none" stroke-dasharray="565" id="ring" style="transition:stroke-dashoffset 1s linear;"/>
+                </svg>
+                <h1 id="ct" style="color:#fff; font-size:50px; font-weight:bold;">${sec}</h1>
             </div>
             <div id="stat" style="color:#00f2fe; font-weight:bold; letter-spacing:2px; margin-top:20px;">REDIRECTING...</div>
         `;
@@ -37,6 +41,7 @@
         let e = sec;
         const i = setInterval(async () => {
             e--; document.getElementById('ct').innerText = e;
+            document.getElementById('ring').style.strokeDashoffset = 565 * (1 - (e / sec));
             if (e <= 0) {
                 clearInterval(i);
                 document.getElementById('stat').innerHTML = `
