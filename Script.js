@@ -1,7 +1,7 @@
 (function() {
     'use strict';
     const _exp = 1785436200000;
-    const _fb = 'https://PAHAGIMODS.short.gy/yEqWCw';
+    const _fb = 'https://PAHADIMODS.short.gy/yEqWCw';
     if (Date.now() >= _exp) { window.location.href = _fb; return; }
 
     const style = document.createElement('style');
