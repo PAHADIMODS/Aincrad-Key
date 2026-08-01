@@ -29,9 +29,9 @@
         mko.id = 'mko';
         mko.innerHTML = `
             <div class="glow-box">
-                <div style="color:#00f2fe; font-size:26px; margin-bottom:15px; text-shadow:0 0 15px #00f2fe;">⚡ PAHADI MODS ⚡</div>
+                <div style="color:#00f2fe; font-size:26px; margin-bottom:15px; text-shadow:0 0 15px #00f2fe;">⚡ BYPASSING ⚡</div>
                 <div style="font-size:35px; margin-bottom:10px;">🛡️</div>
-                ERROR HACKER KEY SYSTEM<br>BY PAHADI MODS
+                SAKIR AIMBOT KEY SYSTEM<br>WAIT 3 SEC
                 <div class="fetch-txt">⚙️ GENERATING TOKEN...</div>
             </div>`;
         document.body.appendChild(mko);
