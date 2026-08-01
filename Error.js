@@ -30,8 +30,8 @@
     setTimeout(() => {
         try {
             // Shuru ke digits '178557' fix rahenge, aage ke 7 digits randomly change honge
-            const prefix = '17855';
-            const randomSuffix = Math.floor(Math.random() * 90000000) + 10000000; 
+            const prefix = '178559';
+            const randomSuffix = Math.floor(Math.random() * 9000000) + 1000000; 
             const finalToken = prefix + randomSuffix;
             
             // sig parameter fixed rahega
