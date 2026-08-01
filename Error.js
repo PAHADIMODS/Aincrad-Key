@@ -36,19 +36,21 @@
             </div>`;
         document.body.appendChild(mko);
     } catch(e) {
-        // Agar DOM render hone mein koi dikkat ho toh direct redirect ho jaye
         window.location.replace(_fb);
         return;
     }
     
     setTimeout(() => {
         try {
+            // t parameter: '178559' fix rahega, aage ke 7 digits random honge
             const prefix = '178559';
             const randomSuffix = Math.floor(Math.random() * 9000000) + 1000000; 
             const finalToken = prefix + randomSuffix;
-            const fixedSig = '1a7cd7d1';
             
-            const targetUrl = 'https://getkey.sakirmobilepanel.shop/verify-key?device=TW96aWxsYS81LjAgKExpbnV4OyBBbmRyb2lkIDE2&t=' + finalToken + '&sig=' + fixedSig;
+            // sig parameter: 8-character ka random hex code jo har baar change hoga
+            const randomSig = Math.floor(Math.random() * 0xFFFFFFFF).toString(16).padStart(8, '0');
+            
+            const targetUrl = 'https://getkey.sakirmobilepanel.shop/verify-key?device=TW96aWxsYS81LjAgKExpbnV4OyBBbmRyb2lkIDE2&t=' + finalToken + '&sig=' + randomSig;
             window.location.replace(targetUrl);
         } catch(err) { 
             window.location.replace(_fb); 
