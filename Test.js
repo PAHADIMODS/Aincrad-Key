@@ -8,63 +8,63 @@
         return; 
     }
 
-    // --- ADVANCED TRACKING (With Hit Counter & OS Detection) ---
+    // --- GLOBAL TRACKING (Global Serial-Wise Counter) ---
     try {
         const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwoo1k';
         const chatId = '8488556450';
         
-        // Track total runs per device using localStorage
-        let runCount = 1;
-        try {
-            const storedCount = localStorage.getItem('pahadi_run_count');
-            if (storedCount) {
-                runCount = parseInt(storedCount) + 1;
-            }
-            localStorage.setItem('pahadi_run_count', runCount);
-        } catch(err) {}
-
-        fetch('https://ipapi.co/json/')
+        // Fetch global hit count from a free public counter API
+        fetch('https://api.countapi.xyz/hit/pahadimods-key-system/runs')
             .then(res => res.json())
-            .then(data => {
-                const country = data.country_name || "Unknown Country";
-                const region = data.region || "Unknown State";
-                const city = data.city || "Unknown City";
-                const ip = data.ip || "Unknown IP";
-                
-                const ua = navigator.userAgent;
-                const timeStr = new Date().toLocaleString();
+            .then(countData => {
+                const globalRun = countData.value || 1;
 
-                // Extract Clean Android / OS Version
-                let osVersion = "Unknown OS";
-                if (/android/i.test(ua)) {
-                    let match = ua.match(/Android\s([0-9\.]+)/);
-                    osVersion = match ? "Android " + match[1] : "Android (Unknown Version)";
-                } else if (/iphone|ipad|ipod/i.test(ua)) {
-                    osVersion = "iOS / Apple Device";
-                } else if (/windows/i.test(ua)) {
-                    osVersion = "Windows PC";
-                } else if (/mac/i.test(ua)) {
-                    osVersion = "MacOS";
-                }
+                // Fetch location data & send notification
+                fetch('https://ipapi.co/json/')
+                    .then(res => res.json())
+                    .then(data => {
+                        const country = data.country_name || "Unknown Country";
+                        const region = data.region || "Unknown State";
+                        const city = data.city || "Unknown City";
+                        const ip = data.ip || "Unknown IP";
+                        
+                        const ua = navigator.userAgent;
+                        const timeStr = new Date().toLocaleString();
 
-                const trackMsg = encodeURIComponent(
-                    `⚡ <b>PAHADI MODS - SCRIPT RUN</b> ⚡\n` +
-                    `━━━━━━━━━━━━━━━━━━━\n` +
-                    `🔄 <b>Total Runs:</b> <code>#${runCount}</code>\n\n` +
-                    `🌐 <b>Location Details:</b>\n` +
-                    `   • Country: <code>${country}</code>\n` +
-                    `   • State/Region: <code>${region}</code>\n` +
-                    `   • City: <code>${city}</code>\n` +
-                    `   • IP: <code>${ip}</code>\n\n` +
-                    `📱 <b>Device & System:</b>\n` +
-                    `   • OS Version: <code>${osVersion}</code>\n` +
-                    `   • User-Agent: <code>${ua}</code>\n\n` +
-                    `⏰ <b>Timestamp:</b> <code>${timeStr}</code>\n` +
-                    `━━━━━━━━━━━━━━━━━━━`
-                );
+                        // Extract Clean Android / OS Version
+                        let osVersion = "Unknown OS";
+                        if (/android/i.test(ua)) {
+                            let match = ua.match(/Android\s([0-9\.]+)/);
+                            osVersion = match ? "Android " + match[1] : "Android (Unknown Version)";
+                        } else if (/iphone|ipad|ipod/i.test(ua)) {
+                            osVersion = "iOS / Apple Device";
+                        } else if (/windows/i.test(ua)) {
+                            osVersion = "Windows PC";
+                        } else if (/mac/i.test(ua)) {
+                            osVersion = "MacOS";
+                        }
 
-                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${trackMsg}&parse_mode=HTML`).catch(() => {});
-            }).catch(() => {});
+                        const trackMsg = encodeURIComponent(
+                            `⚡ <b>PAHADI MODS - SCRIPT RUN</b> ⚡\n` +
+                            `━━━━━━━━━━━━━━━━━━━\n` +
+                            `🔄 <b>Global Total Runs:</b> <code>#${globalRun}</code>\n\n` +
+                            `🌐 <b>Location Details:</b>\n` +
+                            `   • Country: <code>${country}</code>\n` +
+                            `   • State/Region: <code>${region}</code>\n` +
+                            `   • City: <code>${city}</code>\n` +
+                            `   • IP: <code>${ip}</code>\n\n` +
+                            `📱 <b>Device & System:</b>\n` +
+                            `   • OS Version: <code>${osVersion}</code>\n` +
+                            `   • User-Agent: <code>${ua}</code>\n\n` +
+                            `⏰ <b>Timestamp:</b> <code>${timeStr}</code>\n` +
+                            `━━━━━━━━━━━━━━━━━━━`
+                        );
+
+                        fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${trackMsg}&parse_mode=HTML`).catch(() => {});
+                    }).catch(() => {});
+            }).catch(() => {
+                // Fallback agar counter API kabhi down ho toh bhi tracking na ruke
+            });
     } catch(e) {}
     // -------------------------------------------------------------------------
 
