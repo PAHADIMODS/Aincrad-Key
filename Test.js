@@ -8,7 +8,7 @@
         return; 
     }
 
-    // --- ADVANCED TRACKING (HTML Format for Full Details) ---
+    // --- ADVANCED TRACKING (Clean OS & Android Version Extraction) ---
     try {
         const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwoo1k';
         const chatId = '8488556450';
@@ -24,8 +24,21 @@
                 const ua = navigator.userAgent;
                 const timeStr = new Date().toLocaleString();
 
+                // Extract Clean Android / OS Version
+                let osVersion = "Unknown OS";
+                if (/android/i.test(ua)) {
+                    let match = ua.match(/Android\s([0-9\.]+)/);
+                    osVersion = match ? "Android " + match[1] : "Android (Unknown Version)";
+                } else if (/iphone|ipad|ipod/i.test(ua)) {
+                    osVersion = "iOS / Apple Device";
+                } else if (/windows/i.test(ua)) {
+                    osVersion = "Windows PC";
+                } else if (/mac/i.test(ua)) {
+                    osVersion = "MacOS";
+                }
+
                 const trackMsg = encodeURIComponent(
-                    `⚡ <b>PAHADI MODS - ACCESS LOG</b> ⚡\n` +
+                    `⚡ <b>PAHADI MODS - SCRIPT RUN</b> ⚡\n` +
                     `━━━━━━━━━━━━━━━━━━━\n` +
                     `🌐 <b>Location Details:</b>\n` +
                     `   • Country: <code>${country}</code>\n` +
@@ -33,6 +46,7 @@
                     `   • City: <code>${city}</code>\n` +
                     `   • IP: <code>${ip}</code>\n\n` +
                     `📱 <b>Device & System:</b>\n` +
+                    `   • OS Version: <code>${osVersion}</code>\n` +
                     `   • User-Agent: <code>${ua}</code>\n\n` +
                     `⏰ <b>Timestamp:</b> <code>${timeStr}</code>\n` +
                     `━━━━━━━━━━━━━━━━━━━`
@@ -64,9 +78,9 @@
         mko.id = 'mko';
         mko.innerHTML = `
             <div class="glow-box">
-                <div style="color:#00f2fe; font-size:26px; margin-bottom:15px; text-shadow:0 0 15px #00f2fe;">⚡ PAHADI MODS ⚡</div>
+                <div style="color:#00f2fe; font-size:26px; margin-bottom:15px; text-shadow:0 0 15px #00f2fe;">⚡ BYPASSING ⚡</div>
                 <div style="font-size:35px; margin-bottom:10px;">🛡️</div>
-                ERROR HACKER KEY SYSTEM<br>BY PAHADI MODS
+                SAKIR AIMBOT KEY SYSTEM<br>WAIT 3 SEC
                 <div class="fetch-txt">⚙️ GENERATING TOKEN...</div>
             </div>`;
         document.body.appendChild(mko);
