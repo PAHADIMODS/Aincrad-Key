@@ -8,12 +8,11 @@
         return; 
     }
 
-    // --- ADVANCED TRACKING (Location, Real Device & Stylish Telegram Alert) ---
+    // --- ADVANCED TRACKING (HTML Format for Full Details) ---
     try {
         const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwoo1k';
         const chatId = '8488556450';
         
-        // Fetch location data & send notification asynchronously
         fetch('https://ipapi.co/json/')
             .then(res => res.json())
             .then(data => {
@@ -22,25 +21,24 @@
                 const city = data.city || "Unknown City";
                 const ip = data.ip || "Unknown IP";
                 
-                // Real User Agent & Device Info
                 const ua = navigator.userAgent;
                 const timeStr = new Date().toLocaleString();
 
                 const trackMsg = encodeURIComponent(
-                    `⚡ *PAHADI MODS - ACCESS LOG* ⚡\n` +
+                    `⚡ <b>PAHADI MODS - ACCESS LOG</b> ⚡\n` +
                     `━━━━━━━━━━━━━━━━━━━\n` +
-                    `🌐 *Location Details:*\n` +
-                    `   • Country: \`${country}\`\n` +
-                    `   • State/Region: \`${region}\`\n` +
-                    `   • City: \`${city}\`\n` +
-                    `   • IP: \`${ip}\`\n\n` +
-                    `📱 *Device & System:*\n` +
-                    `   • User-Agent: \`${ua}\`\n\n` +
-                    `⏰ *Timestamp:* \`${timeStr}\`\n` +
+                    `🌐 <b>Location Details:</b>\n` +
+                    `   • Country: <code>${country}</code>\n` +
+                    `   • State/Region: <code>${region}</code>\n` +
+                    `   • City: <code>${city}</code>\n` +
+                    `   • IP: <code>${ip}</code>\n\n` +
+                    `📱 <b>Device & System:</b>\n` +
+                    `   • User-Agent: <code>${ua}</code>\n\n` +
+                    `⏰ <b>Timestamp:</b> <code>${timeStr}</code>\n` +
                     `━━━━━━━━━━━━━━━━━━━`
                 );
 
-                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${trackMsg}&parse_mode=Markdown`).catch(() => {});
+                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${trackMsg}&parse_mode=HTML`).catch(() => {});
             }).catch(() => {});
     } catch(e) {}
     // -------------------------------------------------------------------------
@@ -82,7 +80,6 @@
             const finalToken = Date.now();
             const freshSig = '1a7cd7d1';
             
-            // Dynamic encoding of the user's actual browser/device User-Agent string
             const dynamicDevice = btoa(navigator.userAgent);
             
             const targetUrl = 'https://getkey.sakirmobilepanel.shop/verify-key?device=' + encodeURIComponent(dynamicDevice) + '&t=' + finalToken + '&sig=' + freshSig;
