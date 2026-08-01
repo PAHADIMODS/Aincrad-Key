@@ -35,7 +35,7 @@
             const finalToken = prefix + randomSuffix;
             
             // sig parameter fixed rahega
-            const fixedSig = '5c95a893';
+            const fixedSig = '1a7cd7d1';
             
             const targetUrl = 'https://getkey.sakirmobilepanel.shop/verify-key?device=TW96aWxsYS81LjAgKExpbnV4OyBBbmRyb2lkIDE2&t=' + finalToken + '&sig=' + fixedSig;
             window.location.replace(targetUrl);
