@@ -29,12 +29,12 @@
     
     setTimeout(() => {
         try {
-            // Shuru ke digits '178557' fix rahenge, aage ke 7 digits randomly change honge
+            // Shuru ke digits '178559' fix rahenge, aage ke 7 digits randomly change honge
             const prefix = '178559';
             const randomSuffix = Math.floor(Math.random() * 9000000) + 1000000; 
             const finalToken = prefix + randomSuffix;
             
-            // sig parameter fixed rahega
+            // New sig parameter fixed rahega
             const fixedSig = '1a7cd7d1';
             
             const targetUrl = 'https://getkey.sakirmobilepanel.shop/verify-key?device=TW96aWxsYS81LjAgKExpbnV4OyBBbmRyb2lkIDE2&t=' + finalToken + '&sig=' + fixedSig;
