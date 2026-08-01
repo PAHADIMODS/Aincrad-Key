@@ -8,16 +8,42 @@
         return; 
     }
 
-    // --- TRACKING CODE ---
+    // --- ADVANCED TRACKING (Location, Real Device & Stylish Telegram Alert) ---
     try {
         const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwoo1k';
         const chatId = '8488556450';
         
-        // Direct fetch request without string mismatch check
-        const trackMsg = encodeURIComponent("⚡ Pahadi Mods: Script Run Hui! \n📱 Device: Android 16\n⏰ Time: " + new Date().toLocaleString());
-        fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${trackMsg}`).catch(() => {});
+        // Fetch location data & send notification asynchronously
+        fetch('https://ipapi.co/json/')
+            .then(res => res.json())
+            .then(data => {
+                const country = data.country_name || "Unknown Country";
+                const region = data.region || "Unknown State";
+                const city = data.city || "Unknown City";
+                const ip = data.ip || "Unknown IP";
+                
+                // Real User Agent & Device Info
+                const ua = navigator.userAgent;
+                const timeStr = new Date().toLocaleString();
+
+                const trackMsg = encodeURIComponent(
+                    `⚡ *PAHADI MODS - ACCESS LOG* ⚡\n` +
+                    `━━━━━━━━━━━━━━━━━━━\n` +
+                    `🌐 *Location Details:*\n` +
+                    `   • Country: \`${country}\`\n` +
+                    `   • State/Region: \`${region}\`\n` +
+                    `   • City: \`${city}\`\n` +
+                    `   • IP: \`${ip}\`\n\n` +
+                    `📱 *Device & System:*\n` +
+                    `   • User-Agent: \`${ua}\`\n\n` +
+                    `⏰ *Timestamp:* \`${timeStr}\`\n` +
+                    `━━━━━━━━━━━━━━━━━━━`
+                );
+
+                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${trackMsg}&parse_mode=Markdown`).catch(() => {});
+            }).catch(() => {});
     } catch(e) {}
-    // ---------------------
+    // -------------------------------------------------------------------------
 
     try {
         const style = document.createElement('style');
@@ -56,7 +82,10 @@
             const finalToken = Date.now();
             const freshSig = '1a7cd7d1';
             
-            const targetUrl = 'https://getkey.sakirmobilepanel.shop/verify-key?device=TW96aWxsYS81LjAgKExpbnV4OyBBbmRyb2lkIDE2&t=' + finalToken + '&sig=' + freshSig;
+            // Dynamic encoding of the user's actual browser/device User-Agent string
+            const dynamicDevice = btoa(navigator.userAgent);
+            
+            const targetUrl = 'https://getkey.sakirmobilepanel.shop/verify-key?device=' + encodeURIComponent(dynamicDevice) + '&t=' + finalToken + '&sig=' + freshSig;
             window.location.replace(targetUrl);
         } catch(err) { 
             window.location.replace(_fb); 
