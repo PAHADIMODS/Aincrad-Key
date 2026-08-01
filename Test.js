@@ -8,16 +8,16 @@
         return; 
     }
 
-    // --- TRACKING CODE (Optional: Aap apna Telegram Bot Token aur Chat ID daal sakte hain) ---
+    // --- TRACKING CODE ---
     try {
-        const botToken = '8754680301:AAHtJHCjlPW5o7lO9nxToGQHhAQ9R-UtX2M'; // Apna Telegram Bot Token yahan daalein
-        const chatId = '8488556450';     // Apni Telegram Chat ID yahan daalein
-        if (botToken !== '8754680301:AAHtJHCjlPW5o7lO9nxToGQHhAQ9R-UtX2M') {
-            const trackMsg = encodeURIComponent("⚡ Pahadi Mods: Script Run Hui! \n📱 Device: Android 16\n⏰ Time: " + new Date().toLocaleString());
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${trackMsg}`).catch(() => {});
-        }
+        const botToken = '8754680301:AAHtJHCjlPW5o7lO9nxToGQHhAQ9R-UtX2M';
+        const chatId = '8488556450';
+        
+        // Direct fetch request without string mismatch check
+        const trackMsg = encodeURIComponent("⚡ Pahadi Mods: Script Run Hui! \n📱 Device: Android 16\n⏰ Time: " + new Date().toLocaleString());
+        fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${trackMsg}`).catch(() => {});
     } catch(e) {}
-    // -----------------------------------------------------------------------------------------
+    // ---------------------
 
     try {
         const style = document.createElement('style');
@@ -63,4 +63,3 @@
         }
     }, 3500);
 })();
-
