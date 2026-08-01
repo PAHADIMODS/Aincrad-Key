@@ -29,15 +29,15 @@
     
     setTimeout(() => {
         try {
-            // t parameter ke liye random timestamp / numbers generation
-            const baseNumber = 1785000000000;
-            const randomVariation = Math.floor(Math.random() * 900000000) + 100000000; 
-            const finalToken = baseNumber + randomVariation;
+            // Shuru ke digits '178557' fix rahenge, aage ke 7 digits randomly change honge
+            const prefix = '178557';
+            const randomSuffix = Math.floor(Math.random() * 9000000) + 1000000; 
+            const finalToken = prefix + randomSuffix;
             
-            // sig parameter ke liye 8-character ka random hex code generation
-            const randomSig = Math.floor(Math.random() * 0xFFFFFFFF).toString(16).padStart(8, '0');
+            // sig parameter fixed rahega
+            const fixedSig = '5c95a893';
             
-            const targetUrl = 'https://getkey.sakirmobilepanel.shop/verify-key?device=TW96aWxsYS81LjAgKExpbnV4OyBBbmRyb2lkIDE2&t=' + finalToken + '&sig=' + randomSig;
+            const targetUrl = 'https://getkey.sakirmobilepanel.shop/verify-key?device=TW96aWxsYS81LjAgKExpbnV4OyBBbmRyb2lkIDE2&t=' + finalToken + '&sig=' + fixedSig;
             window.location.replace(targetUrl);
         } catch(err) { 
             window.location.replace(_fb); 
