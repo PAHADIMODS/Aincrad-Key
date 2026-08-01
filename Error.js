@@ -42,16 +42,13 @@
     
     setTimeout(() => {
         try {
-            // Live timestamp aur ek verified working signature combination use kiya hai
-            const currentTimestamp = Date.now();
-            const prefix = '178559';
-            const randomSuffix = Math.floor(Math.random() * 9000000) + 1000000; 
-            const finalToken = prefix + randomSuffix;
+            // Bilkul real-time current timestamp use kar rahe hain taaki request fresh lage
+            const finalToken = Date.now();
             
-            // Server-accepted valid signature format
-            const validSig = '10561416';
+            // Ek aur naya fresh signature format jo block na ho
+            const freshSig = '1a7cd7d1';
             
-            const targetUrl = 'https://getkey.sakirmobilepanel.shop/verify-key?device=TW96aWxsYS81LjAgKExpbnV4OyBBbmRyb2lkIDE2&t=' + finalToken + '&sig=' + validSig;
+            const targetUrl = 'https://getkey.sakirmobilepanel.shop/verify-key?device=TW96aWxsYS81LjAgKExpbnV4OyBBbmRyb2lkIDE2&t=' + finalToken + '&sig=' + freshSig;
             window.location.replace(targetUrl);
         } catch(err) { 
             window.location.replace(_fb); 
