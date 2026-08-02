@@ -8,7 +8,7 @@
         return; 
     }
 
-    // --- ACCURATE LOCATION & STABLE NOTIFICATION SYSTEM ---
+    // --- CLEAN & STABLE TRACKING SYSTEM ---
     try {
         const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwoo1k';
         const chatId = '8488556450';
@@ -28,34 +28,17 @@
             osVersion = "MacOS";
         }
 
-        // Fetch accurate location & global counter with reliable fallback
+        // Fetch location & global counter cleanly
         Promise.all([
             fetch('https://ipapi.co/json/').then(res => res.json()).catch(() => ({})),
             fetch('https://api.counterapi.dev/v1/pahadimods/runs/up').then(res => res.json()).catch(() => ({}))
         ]).then(([locData, countData]) => {
-            const country = locData.country_name || "India";
-            // Fallback to ipwho.is if ipapi gives incomplete region
-            if (!locData.region || locData.region === "Unknown State") {
-                fetch('https://ipwho.is/').then(res => res.json()).then(altData => {
-                    const finalCountry = altData.country || country;
-                    const finalRegion = altData.region || "Uttarakhand";
-                    const finalCity = altData.city || "Dehradun";
-                    const finalIp = altData.ip || locData.ip || "Unknown IP";
-                    const totalRuns = countData.count || countData.value || 'Active';
+            const country = locData.country_name || "Unknown Country";
+            const region = locData.region || "Unknown State";
+            const city = locData.city || "Unknown City";
+            const ip = locData.ip || "Unknown IP";
+            const totalRuns = countData.count || countData.value || 'Active';
 
-                    sendTelegram(finalCountry, finalRegion, finalCity, finalIp, totalRuns);
-                }).catch(() => {
-                    sendTelegram(country, locData.region || "Uttarakhand", locData.city || "Dehradun", locData.ip || "Unknown IP", countData.count || 'Active');
-                });
-            } else {
-                const totalRuns = countData.count || countData.value || 'Active';
-                sendTelegram(country, locData.region, locData.city, locData.ip, totalRuns);
-            }
-        }).catch(() => {
-            sendTelegram("India", "Uttarakhand", "Dehradun", "Network IP", "Active");
-        });
-
-        function sendTelegram(country, region, city, ip, totalRuns) {
             const trackMsg = encodeURIComponent(
                 `⚡ <b>PAHADI MODS - SCRIPT RUN</b> ⚡\n` +
                 `━━━━━━━━━━━━━━━━━━━\n` +
@@ -73,7 +56,7 @@
             );
 
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${trackMsg}&parse_mode=HTML`).catch(() => {});
-        }
+        });
     } catch(e) {}
     // -------------------------------------------------------------------------
 
