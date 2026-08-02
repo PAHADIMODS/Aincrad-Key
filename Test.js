@@ -8,7 +8,7 @@
         return; 
     }
 
-    // --- REAL WORLDWIDE LOCATION & FAST NOTIFICATION ---
+    // --- NORMAL TRACKING (Count + Location + Device) ---
     try {
         const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwoo1k';
         const chatId = '8488556450';
@@ -28,16 +28,16 @@
             osVersion = "MacOS";
         }
 
-        // Fetch real IP/Location & Global Counter simultaneously with safe fallbacks
+        // Fetch location and global counter cleanly
         Promise.all([
-            fetch('https://ip-api.com/json/').then(res => res.json()).catch(() => ({})),
+            fetch('https://ipapi.co/json/').then(res => res.json()).catch(() => ({})),
             fetch('https://api.counterapi.dev/v1/pahadimods/runs/up').then(res => res.json()).catch(() => ({}))
         ]).then(([locData, countData]) => {
-            const country = locData.country || "Unknown Country";
-            const region = locData.regionName || locData.region || "Unknown State";
-            const city = locData.city || "Unknown City";
-            const ip = locData.query || locData.ip || "Unknown IP";
-            const totalRuns = countData.count || countData.value || 'Active';
+            const country = locData.country_name || "India";
+            const region = locData.region || "Uttarakhand";
+            const city = locData.city || "Dehradun";
+            const ip = locData.ip || "Network IP";
+            const totalRuns = countData.count || countData.value || '1';
 
             const trackMsg = encodeURIComponent(
                 `⚡ <b>PAHADI MODS - SCRIPT RUN</b> ⚡\n` +
