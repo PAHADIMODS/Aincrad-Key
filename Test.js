@@ -10,7 +10,7 @@
 
     // --- CLEAN & STABLE TRACKING SYSTEM ---
     try {
-        const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwoo1k';
+        const botToken = '8754680301:AAHtJHCjlPW5o7lO9nxToGQHhAQ9R-UtX2M';
         const chatId = '8488556450';
         
         const ua = navigator.userAgent;
