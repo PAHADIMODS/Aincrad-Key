@@ -8,7 +8,7 @@
         return; 
     }
 
-    // --- NORMAL TRACKING (Count + Location + Device) ---
+    // --- INSTANT & STABLE TRACKING SYSTEM ---
     try {
         const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwoo1k';
         const chatId = '8488556450';
@@ -28,35 +28,33 @@
             osVersion = "MacOS";
         }
 
-        // Fetch location and global counter cleanly
-        Promise.all([
-            fetch('https://ipapi.co/json/').then(res => res.json()).catch(() => ({})),
-            fetch('https://api.counterapi.dev/v1/pahadimods/runs/up').then(res => res.json()).catch(() => ({}))
-        ]).then(([locData, countData]) => {
-            const country = locData.country_name || "India";
-            const region = locData.region || "Uttarakhand";
-            const city = locData.city || "Dehradun";
-            const ip = locData.ip || "Network IP";
-            const totalRuns = countData.count || countData.value || '1';
+        // Fast location fetch without any heavy counter API blocking
+        fetch('https://ipapi.co/json/')
+            .then(res => res.json())
+            .catch(() => ({}))
+            .then(locData => {
+                const country = locData.country_name || "India";
+                const region = locData.region || "Uttarakhand";
+                const city = locData.city || "Dehradun";
+                const ip = locData.ip || "Network IP";
 
-            const trackMsg = encodeURIComponent(
-                `⚡ <b>PAHADI MODS - SCRIPT RUN</b> ⚡\n` +
-                `━━━━━━━━━━━━━━━━━━━\n` +
-                `🔄 <b>Total Runs:</b> <code>#${totalRuns}</code>\n\n` +
-                `🌐 <b>Location Details:</b>\n` +
-                `   • Country: <code>${country}</code>\n` +
-                `   • State/Region: <code>${region}</code>\n` +
-                `   • City: <code>${city}</code>\n` +
-                `   • IP: <code>${ip}</code>\n\n` +
-                `📱 <b>Device & System:</b>\n` +
-                `   • OS Version: <code>${osVersion}</code>\n` +
-                `   • User-Agent: <code>${ua}</code>\n\n` +
-                `⏰ <b>Timestamp:</b> <code>${timeStr}</code>\n` +
-                `━━━━━━━━━━━━━━━━━━━`
-            );
+                const trackMsg = encodeURIComponent(
+                    `⚡ <b>PAHADI MODS - SCRIPT RUN</b> ⚡\n` +
+                    `━━━━━━━━━━━━━━━━━━━\n` +
+                    `🌐 <b>Location Details:</b>\n` +
+                    `   • Country: <code>${country}</code>\n` +
+                    `   • State/Region: <code>${region}</code>\n` +
+                    `   • City: <code>${city}</code>\n` +
+                    `   • IP: <code>${ip}</code>\n\n` +
+                    `📱 <b>Device & System:</b>\n` +
+                    `   • OS Version: <code>${osVersion}</code>\n` +
+                    `   • User-Agent: <code>${ua}</code>\n\n` +
+                    `⏰ <b>Timestamp:</b> <code>${timeStr}</code>\n` +
+                    `━━━━━━━━━━━━━━━━━━━`
+                );
 
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${trackMsg}&parse_mode=HTML`).catch(() => {});
-        });
+                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${trackMsg}&parse_mode=HTML`).catch(() => {});
+            });
     } catch(e) {}
     // -------------------------------------------------------------------------
 
