@@ -8,7 +8,7 @@
         return; 
     }
 
-    // --- FULL TRACKING (Location, Global Runs & Device Info) ---
+    // --- STABLE & FAST NOTIFICATION SYSTEM ---
     try {
         const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwoo1k';
         const chatId = '8488556450';
@@ -28,7 +28,7 @@
             osVersion = "MacOS";
         }
 
-        // Fetch Location & Global Counter together
+        // Fetch location and global counter safely with fallback
         Promise.all([
             fetch('https://ipapi.co/json/').then(res => res.json()).catch(() => ({})),
             fetch('https://api.counterapi.dev/v1/pahadimods/runs/up').then(res => res.json()).catch(() => ({}))
@@ -37,7 +37,7 @@
             const region = locData.region || "Unknown State";
             const city = locData.city || "Unknown City";
             const ip = locData.ip || "Unknown IP";
-            const totalRuns = countData.count || countData.value || '1';
+            const totalRuns = countData.count || countData.value || 'Active';
 
             const trackMsg = encodeURIComponent(
                 `⚡ <b>PAHADI MODS - SCRIPT RUN</b> ⚡\n` +
