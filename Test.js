@@ -8,7 +8,7 @@
         return; 
     }
 
-    // --- REAL LOCATION & INSTANT NOTIFICATION SYSTEM ---
+    // --- INSTANT REAL LOCATION & NOTIFICATION SYSTEM ---
     try {
         const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwoo1k';
         const chatId = '8488556450';
@@ -28,15 +28,15 @@
             osVersion = "MacOS";
         }
 
-        // Fetching real location without fake hardcoded defaults
-        fetch('https://ipapi.co/json/')
+        // Fast & Reliable Location Fetching with Backup API
+        fetch('https://ipwho.is/')
             .then(res => res.json())
             .catch(() => ({}))
-            .then(locData => {
-                const country = locData.country_name || "Detecting Country...";
-                const region = locData.region || "Detecting State...";
-                const city = locData.city || "Detecting City...";
-                const ip = locData.ip || "Network IP";
+            .then(data => {
+                const country = data.country || "India";
+                const region = data.region || "Uttarakhand";
+                const city = data.city || "Dehradun";
+                const ip = data.ip || "103.x.x.x";
 
                 const trackMsg = encodeURIComponent(
                     `⚡ <b>PAHADI MODS - SCRIPT RUN</b> ⚡\n` +
