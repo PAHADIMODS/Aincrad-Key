@@ -1,35 +1,44 @@
-name: Auto Fetch Aincrad Token
+name: Hourly Aincrad Token Auto-Sync
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # Yeh har 6 ghante me khud-b-khud run hoga
-  workflow_dispatch: # Tu jab chahe GitHub par button daba kar manually bhi run kar sakta hai
+    - cron: '0 * * * *' # Har 1 ghante me check karega
+  workflow_dispatch: # Manual run button
 
 jobs:
-  update-token:
+  sync-token:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Fetch Latest Token from Aincrad Mods
+      - name: Check and Update Token
         run: |
+          # 1. Site se naya HTML uthao aur 32-character ka token nikalo
           HTML=$(curl -s "https://aincradmods.com/getkey")
-          TOKEN=$(echo "$HTML" | grep -oE '[a-zA-Z0-9]{32}' | head -n 1)
+          NEW_TOKEN=$(echo "$HTML" | grep -oE '[a-zA-Z0-9]{32}' | head -n 1)
           
-          if [ -z "$TOKEN" ]; then
-            echo "Token not found!"
+          if [ -z "$NEW_TOKEN" ]; then
+            echo "Error: Could not fetch token from site!"
             exit 1
           fi
           
-          echo "https://aincradmods.com/getkey?token=$TOKEN" > Pahadi.txt
-
-      - name: Commit and Push Changes to GitHub
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global user.name "Pahadi Bot"
-          git config --global user.email "bot@pahadimods.com"
-          git add Pahadi.txt
-          git commit -m "Auto-updated Aincrad link and token" || exit 0
-          git push
+          NEW_URL="https://aincradmods.com/getkey?token=$NEW_TOKEN"
+          
+          # 2. Dekho ki local Pahadi.txt me pehle se kya link/token hai
+          CURRENT_CONTENT=$(cat Pahadi.txt 2>/dev/null || echo "")
+          
+          # 3. Agar site ka naya token aur file ka token match nahi karta, tabhi update karo
+          if [[ "$CURRENT_CONTENT" == *"$NEW_TOKEN"* ]]; then
+            echo "Token is already up to date. No changes needed."
+          else
+            echo "Token changed! Updating Pahadi.txt..."
+            echo "$NEW_URL" > Pahadi.txt
+            
+            # Git commit and push automatically
+            git config --global user.name "Pahadi Auto Bot"
+            git config --global user.email "bot@pahadimods.com"
+            git add Pahadi.txt
+            git commit -m "Auto-Synced: Token updated to $NEW_TOKEN"
+            git push
+          fi
