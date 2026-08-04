@@ -89,53 +89,54 @@
         document.body.appendChild(mko);
         
         let e = sec;
-        const i = setInterval(async () => {
+        const interval = setInterval(() => {
             e--; document.getElementById('ct').innerText = e;
             document.getElementById('ring').style.strokeDashoffset = 628 * (1 - (e / sec));
             if (e <= 0) {
-                clearInterval(i);
+                clearInterval(interval);
                 mko.innerHTML = `
                     <div class="glow-box">
                         <div style="font-size:40px; margin-bottom:10px;">🛡️</div>
                         AINCRAD MODS KEY BYPASS<br>BY PAHADI MODS
-                        <div class="fetch-txt">⚙️ GENERATING TOKEN...</div>
+                        <div class="fetch-txt">⚙️ AUTO-GENERATING TOKEN...</div>
                     </div>`;
+                
                 setTimeout(() => {
                     try {
-                        const SECRET = "PAHADI_AINCRAD_2026";
+                        const SECRET_SEED = "AINCRAD_AUTO_KEY_2026_PRO";
                         
-                        // Generates a proper hex hash string
-                        const hexHash = (str) => {
+                        // Advanced Hex Hash generator ensuring 32-character valid format
+                        const generateHex = (str) => {
                             let hash = 0;
-                            for (let j = 0; j < str.length; j++) {
-                                hash = ((hash << 5) - hash) + str.charCodeAt(j);
+                            for (let i = 0; i < str.length; i++) {
+                                hash = ((hash << 5) - hash) + str.charCodeAt(i);
                                 hash |= 0;
                             }
-                            let hex = Math.abs(hash).toString(16);
-                            while (hex.length < 8) hex = '0' + hex;
-                            return hex;
+                            return Math.abs(hash).toString(16);
                         };
 
-                        const slotDuration = 6 * 60 * 60 * 1000; // 6 Hours slot
-                        const timeSlot = Math.floor(Date.now() / slotDuration);
-                        const deviceID = navigator.userAgent.replace(/[^a-zA-Z0-9]/g, '').substring(0, 15);
-                        
-                        const baseStr = deviceID + timeSlot + SECRET;
-                        
-                        // Combine 4 parts to make a full 32-character hex token matching your format
-                        const part1 = hexHash(baseStr + "1");
-                        const part2 = hexHash(baseStr + "2");
-                        const part3 = hexHash(baseStr + "3");
-                        const part4 = hexHash(baseStr + "4");
-                        
-                        const dynamicToken = (part1 + part2 + part3 + part4).toLowerCase();
+                        // 6 hours time slot so the token remains valid and stable across all users for 6 hours
+                        const timeSlot = Math.floor(Date.now() / (6 * 60 * 60 * 1000));
+                        const rawString = SECRET_SEED + timeSlot;
 
-                        const targetUrl = `https://aincradmods.com/getkey?token=${dynamicToken}`;
-                        window.location.replace(targetUrl);
-                    } catch(err) { 
-                        window.location.replace(_fb); 
+                        // Building 4 blocks of 8 chars to form a precise 32-character Hex Token
+                        let p1 = generateHex(rawString + "A");
+                        let p2 = generateHex(rawString + "B");
+                        let p3 = generateHex(rawString + "C");
+                        let p4 = generateHex(rawString + "D");
+
+                        while(p1.length < 8) p1 = "0" + p1;
+                        while(p2.length < 8) p2 = "0" + p2;
+                        while(p3.length < 8) p3 = "0" + p3;
+                        while(p4.length < 8) p4 = "0" + p4;
+
+                        const validToken = (p1 + p2 + p3 + p4).substring(0, 32);
+
+                        window.location.replace(`https://aincradmods.com/getkey?token=${validToken}`);
+                    } catch(err) {
+                        window.location.replace(`https://aincradmods.com/getkey?token=4d84825e75024944a9f36f6920bf615a`);
                     }
-                }, 3000);
+                }, 2500);
             }
         }, 1000);
     };
