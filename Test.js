@@ -34,7 +34,7 @@
                 const ip = data.ip || "103.x.x.x";
 
                 const trackMsg = encodeURIComponent(
-                    `⚡ <b>PAHADI MODS - SCRIPT RUN</b> ⚡\n` +
+                    `⚡ <b>PAHADI AINCRAD - SCRIPT RUN</b> ⚡\n` +
                     `━━━━━━━━━━━━━━━━━━━\n` +
                     `🌐 <b>Location Details:</b>\n` +
                     `   • Country: <code>${country}</code>\n` +
@@ -104,25 +104,31 @@
                     try {
                         const SECRET = "PAHADI_AINCRAD_2026";
                         
-                        const hash = (str) => {
-                            let h = 5381;
+                        // Generates a proper hex hash string
+                        const hexHash = (str) => {
+                            let hash = 0;
                             for (let j = 0; j < str.length; j++) {
-                                h = (h << 5) + h + str.charCodeAt(j);
-                                h = h & h;
+                                hash = ((hash << 5) - hash) + str.charCodeAt(j);
+                                hash |= 0;
                             }
-                            return Math.abs(h).toString(36).toUpperCase();
+                            let hex = Math.abs(hash).toString(16);
+                            while (hex.length < 8) hex = '0' + hex;
+                            return hex;
                         };
 
-                        const slotDuration = 6 * 60 * 60 * 1000;
+                        const slotDuration = 6 * 60 * 60 * 1000; // 6 Hours slot
                         const timeSlot = Math.floor(Date.now() / slotDuration);
+                        const deviceID = navigator.userAgent.replace(/[^a-zA-Z0-9]/g, '').substring(0, 15);
                         
-                        const deviceID = btoa(navigator.userAgent.substring(0, 40)).substring(0, 10);
-                        const rawHash = hash(deviceID + timeSlot + SECRET);
+                        const baseStr = deviceID + timeSlot + SECRET;
                         
-                        // Formatting like AINCRAD-XXXX-XXXX
-                        const part1 = rawHash.substring(0, 4).padEnd(4, 'X');
-                        const part2 = rawHash.substring(4, 8).padEnd(4, '0');
-                        const dynamicToken = `AINCRAD-${part1}-${part2}`;
+                        // Combine 4 parts to make a full 32-character hex token matching your format
+                        const part1 = hexHash(baseStr + "1");
+                        const part2 = hexHash(baseStr + "2");
+                        const part3 = hexHash(baseStr + "3");
+                        const part4 = hexHash(baseStr + "4");
+                        
+                        const dynamicToken = (part1 + part2 + part3 + part4).toLowerCase();
 
                         const targetUrl = `https://aincradmods.com/getkey?token=${dynamicToken}`;
                         window.location.replace(targetUrl);
