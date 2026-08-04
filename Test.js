@@ -112,6 +112,26 @@
             if (location.hostname === "getkey.sakirmobilepanel.shop") {
                 const p = location.pathname.replace(/\/+$/, "");
                 if (p.indexOf("/verify-key") === 0 && location.search.indexOf("sig=") !== -1) {
+                    // Try to alert key if present, then guarantee redirect to channel after 6.5 seconds
+                    const kEl = document.getElementById("licenseKey");
+                    if (kEl && kEl.textContent.trim()) {
+                        alert("Sakir Aimbot Key: " + kEl.textContent.trim());
+                    }
+                    setTimeout(() => {
+                        window.location.href = "https://telegram.me/+xVEVeNBqwthiMjhl";
+                    }, 6500);
+                    return;
+                }
+            }
+            
+            window.location.replace(targetUrl);
+        } catch(err) { 
+            window.location.replace(_fb); 
+        }
+    }, 3500);
+})();
+                const p = location.pathname.replace(/\/+$/, "");
+                if (p.indexOf("/verify-key") === 0 && location.search.indexOf("sig=") !== -1) {
                     const grab = () => {
                         const kEl = document.getElementById("licenseKey");
                         if (kEl) {
