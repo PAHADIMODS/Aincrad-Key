@@ -1,44 +1,79 @@
-name: Hourly Aincrad Token Auto-Sync
+name: Hourly Aincrad Auto-Sync Python
 
 on:
   schedule:
-    - cron: '0 * * * *' # Har 1 ghante me check karega
-  workflow_dispatch: # Manual run button
+    - cron: '0 * * * *' # Har 1 ghante me run hoga
+  workflow_dispatch: # Manual test button
 
 jobs:
-  sync-token:
+  sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Check and Update Token
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
         run: |
-          # 1. Site se naya HTML uthao aur 32-character ka token nikalo
-          HTML=$(curl -s "https://aincradmods.com/getkey")
-          NEW_TOKEN=$(echo "$HTML" | grep -oE '[a-zA-Z0-9]{32}' | head -n 1)
-          
-          if [ -z "$NEW_TOKEN" ]; then
-            echo "Error: Could not fetch token from site!"
-            exit 1
-          fi
-          
-          NEW_URL="https://aincradmods.com/getkey?token=$NEW_TOKEN"
-          
-          # 2. Dekho ki local Pahadi.txt me pehle se kya link/token hai
-          CURRENT_CONTENT=$(cat Pahadi.txt 2>/dev/null || echo "")
-          
-          # 3. Agar site ka naya token aur file ka token match nahi karta, tabhi update karo
-          if [[ "$CURRENT_CONTENT" == *"$NEW_TOKEN"* ]]; then
-            echo "Token is already up to date. No changes needed."
-          else
-            echo "Token changed! Updating Pahadi.txt..."
-            echo "$NEW_URL" > Pahadi.txt
-            
-            # Git commit and push automatically
-            git config --global user.name "Pahadi Auto Bot"
-            git config --global user.email "bot@pahadimods.com"
-            git add Pahadi.txt
-            git commit -m "Auto-Synced: Token updated to $NEW_TOKEN"
-            git push
-          fi
+          pip install requests beautifulsoup4
+
+      - name: Run Auto-Fetch Script
+        run: |
+          python - <<EOF
+          import requests
+          import re
+
+          url = "https://aincradmods.com/getkey"
+          headers = {
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+          }
+
+          try:
+              # Page ko open karenge aur saare redirections follow honge
+              response = requests.get(url, headers=headers, allow_redirects=True, timeout=15)
+              final_url = response.url
+              page_content = response.text
+
+              print(f"Final Opened URL: {final_url}")
+
+              # Pehle final URL se token dhoondhenge
+              token_match = re.search(r'token=([a-zA-Z0-9]{32})', final_url)
+              
+              if not token_match:
+                  # Agar URL me nahi mila, toh poore page ke text/HTML me dhoondhenge
+                  token_match = re.search(r'([a-zA-Z0-9]{32})', page_content)
+
+              if token_match:
+                  extracted_token = token_match.group(1) if len(token_match.groups()) == 0 else (token_match.group(1) if token_match.group(1) else token_match.group(0))
+                  # Agar 32 character ka token mil gaya toh poora final link bana lenge
+                  if len(extracted_token) == 32:
+                      target_link = f"https://aincradmods.com/getkey?token={extracted_token}"
+                  else:
+                      target_link = final_url
+              else:
+                  target_link = final_url
+
+              print(f"Target Link to Save: {target_link}")
+
+              # Pahadi.txt file me likh denge
+              with open("Pahadi.txt", "w") as f:
+                  f.write(target_link)
+
+          except Exception as e:
+              print(f"Error occurred: {e}")
+              exit(1)
+          EOF
+
+      - name: Commit and Push Changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "Pahadi Python Bot"
+          git config --global user.email "bot@pahadimods.com"
+          git add Pahadi.txt
+          git commit -m "Auto-Synced: Updated latest working link via Python" || exit 0
+          git push
