@@ -1,0 +1,35 @@
+name: Auto Fetch Aincrad Token
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Yeh har 6 ghante me khud-b-khud run hoga
+  workflow_dispatch: # Tu jab chahe GitHub par button daba kar manually bhi run kar sakta hai
+
+jobs:
+  update-token:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Fetch Latest Token from Aincrad Mods
+        run: |
+          HTML=$(curl -s "https://aincradmods.com/getkey")
+          TOKEN=$(echo "$HTML" | grep -oE '[a-zA-Z0-9]{32}' | head -n 1)
+          
+          if [ -z "$TOKEN" ]; then
+            echo "Token not found!"
+            exit 1
+          fi
+          
+          echo "https://aincradmods.com/getkey?token=$TOKEN" > Pahadi.txt
+
+      - name: Commit and Push Changes to GitHub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "Pahadi Bot"
+          git config --global user.email "bot@pahadimods.com"
+          git add Pahadi.txt
+          git commit -m "Auto-updated Aincrad link and token" || exit 0
+          git push
