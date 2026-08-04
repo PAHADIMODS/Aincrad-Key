@@ -1,32 +1,16 @@
 // ==UserScript==
-// @name         SX2 Key Bypass
-// @namespace    SX2 Bypass
-// @version      1
+// @name         SX2 Key Checker & Countdown Display
+// @namespace    Made By @NickUpdates (Telegram)
+// @version      5
 // @match        https://sx2lador.online/GetKey.php
 // @run-at       document-start
 // @grant        none
 // @license      MIT
-// @description  Bypass SX2 Key System
+// @description  Bypass SX2 Key System and Display Active Key
 // ==/UserScript==
 
-(async function () {
-    async function waitForCloudflare() {
-        while (true) {
-            const title = document.title.toLowerCase();
-            if (
-                title.includes("just a moment") ||
-                title.includes("checking your browser") ||
-                document.querySelector("iframe[src*='turnstile']") ||
-                document.querySelector(".cf-challenge")
-            ) {
-                await new Promise(r => setTimeout(r, 10000));
-                continue;
-            }
-            break;
-        }
-    }
-    await waitForCloudflare();
-    "use strict";
+(function() {
+    'use strict';
 
     const API_BASE = "https://sx2lador.online/api";
     const API_KEY = "SX2TEAM-SECRET-2024-XYZ789-ABCDEF";
@@ -37,62 +21,58 @@
         document.close();
     }
 
-    show(`
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Bypassing Key...</title>
-<style>
-html, body {
-    margin: 0;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #111;
-    color: #fff;
-    font-family: Arial, sans-serif;
-}
-.card {
-    text-align: center;
-    padding: 2rem;
-    background: #1e1e1e;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-}
-</style>
-</head>
-<body>
-<div class="card">
-    <h1>Fetching Key...</h1>
-    <p>Please wait...</p>
-</div>
-</body>
-</html>
-`);
-
     try {
-        const checkRes = await fetch(`${API_BASE}/check_existing_key.php`, {
+        const style = document.createElement('style');
+        style.innerHTML = `
+            #mko { 
+                position: fixed; inset: 0; z-index: 999999; font-family: sans-serif;
+                display: flex; flex-direction: column; align-items: center; justify-content: center;
+                background: rgba(0,0,0,0.85); backdrop-filter: blur(15px);
+            }
+            .glow-box { 
+                border: 3px solid #00f2fe; box-shadow: 0 0 25px #00f2fe; border-radius: 20px; 
+                background: #0a0a0a; padding: 40px; text-align: center; font-weight: bold; 
+                width: 80%; max-width: 380px; color: #fff; 
+            }
+            .fetch-txt { color: #00ff00; margin-top: 25px; font-weight: bold; font-size: 18px; }
+        `;
+        document.head.appendChild(style);
+
+        const mko = document.createElement('div'); 
+        mko.id = 'mko';
+        mko.innerHTML = `
+            <div class="glow-box">
+                <div style="color:#00f2fe; font-size:26px; margin-bottom:15px; text-shadow:0 0 15px #00f2fe;">⚡ BYPASSING ⚡</div>
+                <div style="font-size:35px; margin-bottom:10px;">🛡️</div>
+                SX2 KEY SYSTEM<br>WAIT 3 SEC
+                <div class="fetch-txt">⚙️ CHECKING SESSION...</div>
+            </div>`;
+        document.body.appendChild(mko);
+    } catch(e) {}
+
+    setTimeout(() => {
+        fetch(`${API_BASE}/check_existing_key.php`, {
             method: "GET",
             headers: {
                 "x-api-key": API_KEY
             }
-        });
+        })
+        .then(res => {
+            if (!res.ok) {
+                show(`<h1>Key check HTTP Error: ${res.status}</h1>`);
+                return;
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (!data) return;
 
-        if (!checkRes.ok) {
-            show(`<h1>HTTP Error: ${checkRes.status}</h1>`);
-            return;
-        }
+            if (data.has_key || data.key) {
+                const initialSeconds = data.remaining_seconds || 0;
+                const initialFormatted = data.remaining_time || "0h 0m 0s";
+                const expiresAt = data.expires_at || "N/A";
 
-        const data = await checkRes.json();
-
-        if (data && (data.has_key || data.key)) {
-            const initialSeconds = data.remaining_seconds || 0;
-            const initialFormatted = data.remaining_time || "0h 0m 0s";
-            const expiresAt = data.expires_at || "N/A";
-
-            show(`
+                show(`
 <!DOCTYPE html>
 <html>
 <head>
@@ -157,8 +137,8 @@ html, body {
 </head>
 <body>
 <div class="card">
-    <h1 style="color:#00ff88; margin-top:0;">Key Found!</h1>
-    <p>Your access key:</p>
+    <h1 style="color:#00ff88; margin-top:0;">Key Bypassed!</h1>
+    <p>Your current session key:</p>
     <div class="key-box">${data.key}</div>
 
     <div class="timer-container">
@@ -196,35 +176,35 @@ html, body {
 </body>
 </html>
 `);
-            return;
-        }
-
-        show(`<h1>No Active Key Found</h1>`);
-    } catch (err) {
-        show(`<h1>Error</h1><p>${err.message}</p>`);
-    }
-})();
-                const p = location.pathname.replace(/\/+$/, "");
-                if (p.indexOf("/verify-key") === 0 && location.search.indexOf("sig=") !== -1) {
-                    const grab = () => {
-                        const kEl = document.getElementById("licenseKey");
-                        if (kEl) {
-                            const key = kEl.textContent.trim();
-                            if (key) {
-                                alert("Sakir Aimbot Key: " + key);
-                                return true;
-                            }
-                        }
-                        return false;
-                    };
-                    if (!grab()) setTimeout(grab, 1000);
-                    return;
-                }
+                return;
             }
-            
-            window.location.replace(targetUrl);
-        } catch(err) { 
-            window.location.replace(_fb); 
-        }
+
+            function base36(num) {
+                const chars = "0123456789abcdefghijklmnopqrstuvwxyz";
+                if (num === 0) return "0";
+                let out = "";
+                while (num > 0) {
+                    out = chars[num % 36] + out;
+                    num = Math.floor(num / 36);
+                }
+                return out;
+            }
+
+            function jsRandomString() {
+                let s = "";
+                while (s.length < 13) {
+                    const n = Math.random();
+                    s += base36(Math.floor(n * Math.pow(36, 10)));
+                }
+                return s.slice(0, 13);
+            }
+
+            const verifyCode = "sx2" + jsRandomString() + jsRandomString();
+            location.replace("https://sx2lador.online/v.php?c=" + verifyCode);
+
+        })
+        .catch(err => {
+            show(`<h1>Network / API Error</h1><p>${err.message}</p>`);
+        });
     }, 3500);
 })();
