@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SX2 Key Checker & Countdown Display
 // @namespace    Made By @NickUpdates (Telegram)
-// @version      5
+// @version      6
 // @match        https://sx2lador.online/GetKey.php
 // @run-at       document-start
 // @grant        none
@@ -54,17 +54,25 @@
         fetch(`${API_BASE}/check_existing_key.php`, {
             method: "GET",
             headers: {
-                "x-api-key": API_KEY
-            }
+                "x-api-key": API_KEY,
+                "Accept": "application/json"
+            },
+            credentials: "include"
         })
         .then(res => {
             if (!res.ok) {
-                show(`<h1>Key check HTTP Error: ${res.status}</h1>`);
-                return;
+                throw new Error("HTTP Error: " + res.status);
             }
-            return res.json();
+            return res.text();
         })
-        .then(data => {
+        .then(text => {
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                throw new Error("Invalid JSON Response from server");
+            }
+
             if (!data) return;
 
             if (data.has_key || data.key) {
@@ -204,7 +212,28 @@ html, body {
 
         })
         .catch(err => {
-            show(`<h1>Network / API Error</h1><p>${err.message}</p>`);
+            show(`
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Bypass Error</title>
+<style>
+body { background: #111; color: #fff; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+.box { background: #1e1e1e; padding: 2rem; border-radius: 8px; text-align: center; border: 1px solid #ff4d4d; max-width: 400px; }
+h1 { color: #ff4d4d; font-size: 1.5rem; }
+p { color: #aaa; word-break: break-all; }
+</style>
+</head>
+<body>
+<div class="box">
+    <h1>Bypass Error</h1>
+    <p>${err.message}</p>
+    <button onclick="location.reload()" style="margin-top:15px; padding:10px 20px; background:#00ff88; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">Retry</button>
+</div>
+</body>
+</html>
+            `);
         });
     }, 3500);
 })();
