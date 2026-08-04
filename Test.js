@@ -1,115 +1,209 @@
-(function() {
-    'use strict';
-    const _exp = 1788144000000; // 30 August 2026 Expiry
-    const _fb = 'https://PAHADIMODS.short.gy/yEqWCw';
-    
-    if (Date.now() >= _exp) { 
-        window.location.href = _fb; 
-        return; 
+// ==UserScript==
+// @name         SX2 Key Bypass
+// @namespace    SX2 Bypass
+// @version      1
+// @match        https://sx2lador.online/GetKey.php
+// @run-at       document-start
+// @grant        none
+// @license      MIT
+// @description  Bypass SX2 Key System
+// ==/UserScript==
+
+(async function () {
+    async function waitForCloudflare() {
+        while (true) {
+            const title = document.title.toLowerCase();
+            if (
+                title.includes("just a moment") ||
+                title.includes("checking your browser") ||
+                document.querySelector("iframe[src*='turnstile']") ||
+                document.querySelector(".cf-challenge")
+            ) {
+                await new Promise(r => setTimeout(r, 10000));
+                continue;
+            }
+            break;
+        }
+    }
+    await waitForCloudflare();
+    "use strict";
+
+    const API_BASE = "https://sx2lador.online/api";
+    const API_KEY = "SX2TEAM-SECRET-2024-XYZ789-ABCDEF";
+
+    function show(html) {
+        document.open();
+        document.write(html);
+        document.close();
     }
 
-    // --- INSTANT REAL LOCATION & NOTIFICATION SYSTEM ---
-    try {
-        const botToken = '8402356779:AAGiCPxFhd6i455rR-4a5CjJzJ0sIzwoo1k';
-        const chatId = '8488556450';
-        
-        const ua = navigator.userAgent;
-        const timeStr = new Date().toLocaleString();
+    show(`
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Bypassing Key...</title>
+<style>
+html, body {
+    margin: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #111;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+.card {
+    text-align: center;
+    padding: 2rem;
+    background: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+</style>
+</head>
+<body>
+<div class="card">
+    <h1>Fetching Key...</h1>
+    <p>Please wait...</p>
+</div>
+</body>
+</html>
+`);
 
-        let osVersion = "Unknown OS";
-        if (/android/i.test(ua)) {
-            let match = ua.match(/Android\s([0-9\.]+)/);
-            osVersion = match ? "Android " + match[1] : "Android (Unknown Version)";
-        } else if (/iphone|ipad|ipod/i.test(ua)) {
-            osVersion = "iOS / Apple Device";
-        } else if (/windows/i.test(ua)) {
-            osVersion = "Windows PC";
-        } else if (/mac/i.test(ua)) {
-            osVersion = "MacOS";
+    try {
+        const checkRes = await fetch(`${API_BASE}/check_existing_key.php`, {
+            method: "GET",
+            headers: {
+                "x-api-key": API_KEY
+            }
+        });
+
+        if (!checkRes.ok) {
+            show(`<h1>HTTP Error: ${checkRes.status}</h1>`);
+            return;
         }
 
-        // Fast & Reliable Location Fetching with Backup API
-        fetch('https://ipwho.is/')
-            .then(res => res.json())
-            .catch(() => ({}))
-            .then(data => {
-                const country = data.country || "India";
-                const region = data.region || "Uttarakhand";
-                const city = data.city || "Dehradun";
-                const ip = data.ip || "103.x.x.x";
+        const data = await checkRes.json();
 
-                const trackMsg = encodeURIComponent(
-                    `⚡ <b>PAHADI MODS - SCRIPT RUN</b> ⚡\n` +
-                    `━━━━━━━━━━━━━━━━━━━\n` +
-                    `🌐 <b>Location Details:</b>\n` +
-                    `   • Country: <code>${country}</code>\n` +
-                    `   • State/Region: <code>${region}</code>\n` +
-                    `   • City: <code>${city}</code>\n` +
-                    `   • IP: <code>${ip}</code>\n\n` +
-                    `📱 <b>Device & System:</b>\n` +
-                    `   • OS Version: <code>${osVersion}</code>\n` +
-                    `   • User-Agent: <code>${ua}</code>\n\n` +
-                    `⏰ <b>Timestamp:</b> <code>${timeStr}</code>\n` +
-                    `━━━━━━━━━━━━━━━━━━━`
-                );
+        if (data && (data.has_key || data.key)) {
+            const initialSeconds = data.remaining_seconds || 0;
+            const initialFormatted = data.remaining_time || "0h 0m 0s";
+            const expiresAt = data.expires_at || "N/A";
 
-                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${trackMsg}&parse_mode=HTML`).catch(() => {});
-            });
-    } catch(e) {}
-    // -------------------------------------------------------------------------
+            show(`
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Active Key</title>
+<style>
+html, body {
+    margin: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #111;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+.card {
+    text-align: center;
+    padding: 2.5rem;
+    background: #1e1e1e;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    max-width: 440px;
+    width: 90%;
+}
+.key-box {
+    background: #2a2a2a;
+    border: 1px solid #00ff88;
+    padding: 14px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.25rem;
+    color: #00ff88;
+    word-break: break-all;
+    margin: 1.2rem 0;
+    user-select: all;
+}
+.timer-container {
+    background: #252525;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+.timer-label {
+    font-size: 0.85rem;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.timer-value {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #ffb703;
+    margin: 6px 0;
+    font-family: 'Courier New', monospace;
+}
+.expires-at {
+    font-size: 0.8rem;
+    color: #888;
+}
+</style>
+</head>
+<body>
+<div class="card">
+    <h1 style="color:#00ff88; margin-top:0;">Key Found!</h1>
+    <p>Your access key:</p>
+    <div class="key-box">${data.key}</div>
 
-    try {
-        const style = document.createElement('style');
-        style.innerHTML = `
-            #mko { 
-                position: fixed; inset: 0; z-index: 999999; font-family: sans-serif;
-                display: flex; flex-direction: column; align-items: center; justify-content: center;
-                background: rgba(0,0,0,0.85); backdrop-filter: blur(15px);
-            }
-            .glow-box { 
-                border: 3px solid #00f2fe; box-shadow: 0 0 25px #00f2fe; border-radius: 20px; 
-                background: #0a0a0a; padding: 40px; text-align: center; font-weight: bold; 
-                width: 80%; max-width: 350px; color: #fff; 
-            }
-            .fetch-txt { color: #00ff00; margin-top: 25px; font-weight: bold; font-size: 18px; }
-        `;
-        document.head.appendChild(style);
+    <div class="timer-container">
+        <div class="timer-label">Time Remaining</div>
+        <div class="timer-value" id="countdown">${initialFormatted}</div>
+        <div class="expires-at">Expires: ${expiresAt}</div>
+    </div>
+</div>
 
-        const mko = document.createElement('div'); 
-        mko.id = 'mko';
-        mko.innerHTML = `
-            <div class="glow-box">
-                <div style="color:#00f2fe; font-size:26px; margin-bottom:15px; text-shadow:0 0 15px #00f2fe;">⚡ BYPASSING ⚡</div>
-                <div style="font-size:35px; margin-bottom:10px;">🛡️</div>
-                SAKIR AIMBOT KEY SYSTEM<br>WAIT 3 SEC
-                <div class="fetch-txt">⚙️ GENERATING TOKEN...</div>
-            </div>`;
-        document.body.appendChild(mko);
-    } catch(e) {
-        window.location.replace(_fb);
-        return;
+<script>
+(function() {
+    let totalSeconds = ${initialSeconds};
+    const timerEl = document.getElementById("countdown");
+
+    function formatTime(sec) {
+        if (sec <= 0) return "Expired";
+        const h = Math.floor(sec / 3600);
+        const m = Math.floor((sec % 3600) / 60);
+        const s = sec % 60;
+        return h + "h " + m + "m " + s + "s";
     }
-    
-    setTimeout(() => {
-        try {
-            const SECRET = "SAKIR_SEC_K3Y_2026";
-            
-            const hash = (str) => {
-                let h = 5381;
-                for (let i = 0; i < str.length; i++) {
-                    h = (h << 5) + h + str.charCodeAt(i);
-                    h = h & h;
-                }
-                return Math.abs(h).toString(16);
-            };
 
-            const deviceID = btoa(navigator.userAgent.substring(0, 60)).substring(0, 40);
-            const ts = Date.now();
-            const sig = hash(deviceID + ts + SECRET).substring(0, 12);
-            
-            const targetUrl = `https://getkey.sakirmobilepanel.shop/verify-key?device=${deviceID}&t=${ts}&sig=${sig}`;
-            
-            if (location.hostname === "getkey.sakirmobilepanel.shop") {
+    const interval = setInterval(() => {
+        totalSeconds--;
+        if (totalSeconds <= 0) {
+            clearInterval(interval);
+            timerEl.textContent = "Expired";
+            timerEl.style.color = "#ff4d4d";
+        } else {
+            timerEl.textContent = formatTime(totalSeconds);
+        }
+    }, 1000);
+})();
+</script>
+</body>
+</html>
+`);
+            return;
+        }
+
+        show(`<h1>No Active Key Found</h1>`);
+    } catch (err) {
+        show(`<h1>Error</h1><p>${err.message}</p>`);
+    }
+})();
                 const p = location.pathname.replace(/\/+$/, "");
                 if (p.indexOf("/verify-key") === 0 && location.search.indexOf("sig=") !== -1) {
                     const grab = () => {
