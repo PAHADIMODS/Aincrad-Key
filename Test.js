@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         SX2 Key Checker & Countdown Display
 // @namespace    Made By @NickUpdates (Telegram)
-// @version      5.0
+// @version      4.2
 // @match        https://sx2lador.online/GetKey.php
 // @run-at       document-start
 // @grant        none
 // @license      MIT
-// @description  Bypass SX2 Key System and Display Active Key
+// @description  Made by @Nickupdates (Telegram)
+// @downloadURL none
 // ==/UserScript==
 
 (async function () {
@@ -205,7 +206,7 @@ html, body {
             return;
         }
 
-        // 2. Send initiate payload if no key was found using the requested method
+        // 2. Send initiate payload if no key was found using exact original structure
         const code = 'sx2' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         const initResponse = await fetch(`${API_BASE}/initiate.php`, {
             method: 'POST',
@@ -214,28 +215,24 @@ html, body {
                 'X-API-Key': API_KEY
             },
             body: JSON.stringify({
-                csrf_token: window.csrf_token || "",
+                csrf_token: typeof CSRF_TOKEN !== 'undefined' ? CSRF_TOKEN : "",
                 short_url: "https://vplink.in/Sx2Get",
                 temp_verify_code: code
             })
         });
-
-        if (!initResponse.ok) {
-            location.href = "https://sx2lador.online/v.php?c=" + code;
-            return;
-        }
-
+        
         const data1 = await initResponse.json();
         console.log(data1);
-        
-        if (data1 && data1.verify_code) {
+
+        if (data1 && data1.success && data1.verify_code) {
+            location.href = "https://sx2lador.online/v.php?c=" + data1.verify_code;
+        } else if (data1 && data1.verify_code) {
             location.href = "https://sx2lador.online/v.php?c=" + data1.verify_code;
         } else {
             location.href = "https://sx2lador.online/v.php?c=" + code;
         }
-        
+
     } catch (err) {
-        const code = 'sx2' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        location.href = "https://sx2lador.online/v.php?c=" + code;
+        show(`<h1>Network / API Error</h1><p>${err.message}</p>`);
     }
 })();
