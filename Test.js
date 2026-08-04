@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SX2 Key Checker & Countdown Display
 // @namespace    Made By @NickUpdates (Telegram)
-// @version      6
+// @version      5.0
 // @match        https://sx2lador.online/GetKey.php
 // @run-at       document-start
 // @grant        none
@@ -9,78 +9,96 @@
 // @description  Bypass SX2 Key System and Display Active Key
 // ==/UserScript==
 
-(function() {
-    'use strict';
+(async function () {
 
+    async function waitForCloudflare() {
+        while (true) {
+             const title = document.title.toLowerCase();
+            if (
+                title.includes("just a moment") ||
+                title.includes("checking your browser") ||
+                document.querySelector("iframe[src*='turnstile']") ||
+                document.querySelector(".cf-challenge")
+            ) {
+                await new Promise(r => setTimeout(r, 20000));
+                continue;
+            }
+            break;
+        }
+    }
+    await waitForCloudflare();
+    "use strict";
+
+    // --- Configuration ---
     const API_BASE = "https://sx2lador.online/api";
     const API_KEY = "SX2TEAM-SECRET-2024-XYZ789-ABCDEF";
 
+    // Helper to replace page content with HTML
     function show(html) {
         document.open();
         document.write(html);
         document.close();
     }
 
+    // Display temporary loading overlay
+    show(`
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Checking Key...</title>
+<style>
+html, body {
+    margin: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #111;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+.card {
+    text-align: center;
+    padding: 2rem;
+    background: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+</style>
+</head>
+<body>
+<div class="card">
+    <h1>Checking Access Key...</h1>
+    <p>Please wait while we check your session status.</p>
+</div>
+</body>
+</html>
+`);
+
     try {
-        const style = document.createElement('style');
-        style.innerHTML = `
-            #mko { 
-                position: fixed; inset: 0; z-index: 999999; font-family: sans-serif;
-                display: flex; flex-direction: column; align-items: center; justify-content: center;
-                background: rgba(0,0,0,0.85); backdrop-filter: blur(15px);
-            }
-            .glow-box { 
-                border: 3px solid #00f2fe; box-shadow: 0 0 25px #00f2fe; border-radius: 20px; 
-                background: #0a0a0a; padding: 40px; text-align: center; font-weight: bold; 
-                width: 80%; max-width: 380px; color: #fff; 
-            }
-            .fetch-txt { color: #00ff00; margin-top: 25px; font-weight: bold; font-size: 18px; }
-        `;
-        document.head.appendChild(style);
-
-        const mko = document.createElement('div'); 
-        mko.id = 'mko';
-        mko.innerHTML = `
-            <div class="glow-box">
-                <div style="color:#00f2fe; font-size:26px; margin-bottom:15px; text-shadow:0 0 15px #00f2fe;">⚡ BYPASSING ⚡</div>
-                <div style="font-size:35px; margin-bottom:10px;">🛡️</div>
-                SX2 KEY SYSTEM<br>WAIT 3 SEC
-                <div class="fetch-txt">⚙️ CHECKING SESSION...</div>
-            </div>`;
-        document.body.appendChild(mko);
-    } catch(e) {}
-
-    setTimeout(() => {
-        fetch(`${API_BASE}/check_existing_key.php`, {
+        // 1. Check if a key already exists
+        const checkRes = await fetch(`${API_BASE}/check_existing_key.php`, {
             method: "GET",
             headers: {
-                "x-api-key": API_KEY,
-                "Accept": "application/json"
-            },
-            credentials: "include"
-        })
-        .then(res => {
-            if (!res.ok) {
-                throw new Error("HTTP Error: " + res.status);
+                "x-api-key": API_KEY
             }
-            return res.text();
-        })
-        .then(text => {
-            let data;
-            try {
-                data = JSON.parse(text);
-            } catch (e) {
-                throw new Error("Invalid JSON Response from server");
-            }
+        });
 
-            if (!data) return;
+        if (!checkRes.ok) {
+            show(`<h1>Key check HTTP Error: ${checkRes.status}</h1>`);
+            return;
+        }
 
-            if (data.has_key || data.key) {
-                const initialSeconds = data.remaining_seconds || 0;
-                const initialFormatted = data.remaining_time || "0h 0m 0s";
-                const expiresAt = data.expires_at || "N/A";
+        const data = await checkRes.json();
 
-                show(`
+        // If a key exists, render the key card with a live countdown timer
+        if (data && (data.has_key || data.key)) {
+            const initialSeconds = data.remaining_seconds || 0;
+            const initialFormatted = data.remaining_time || "0h 0m 0s";
+            const expiresAt = data.expires_at || "N/A";
+
+            show(`
 <!DOCTYPE html>
 <html>
 <head>
@@ -145,7 +163,7 @@ html, body {
 </head>
 <body>
 <div class="card">
-    <h1 style="color:#00ff88; margin-top:0;">Key Bypassed!</h1>
+    <h1 style="color:#00ff88; margin-top:0;">Key Active!</h1>
     <p>Your current session key:</p>
     <div class="key-box">${data.key}</div>
 
@@ -184,56 +202,40 @@ html, body {
 </body>
 </html>
 `);
-                return;
-            }
+            return;
+        }
 
-            function base36(num) {
-                const chars = "0123456789abcdefghijklmnopqrstuvwxyz";
-                if (num === 0) return "0";
-                let out = "";
-                while (num > 0) {
-                    out = chars[num % 36] + out;
-                    num = Math.floor(num / 36);
-                }
-                return out;
-            }
-
-            function jsRandomString() {
-                let s = "";
-                while (s.length < 13) {
-                    const n = Math.random();
-                    s += base36(Math.floor(n * Math.pow(36, 10)));
-                }
-                return s.slice(0, 13);
-            }
-
-            const verifyCode = "sx2" + jsRandomString() + jsRandomString();
-            location.replace("https://sx2lador.online/v.php?c=" + verifyCode);
-
-        })
-        .catch(err => {
-            show(`
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Bypass Error</title>
-<style>
-body { background: #111; color: #fff; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-.box { background: #1e1e1e; padding: 2rem; border-radius: 8px; text-align: center; border: 1px solid #ff4d4d; max-width: 400px; }
-h1 { color: #ff4d4d; font-size: 1.5rem; }
-p { color: #aaa; word-break: break-all; }
-</style>
-</head>
-<body>
-<div class="box">
-    <h1>Bypass Error</h1>
-    <p>${err.message}</p>
-    <button onclick="location.reload()" style="margin-top:15px; padding:10px 20px; background:#00ff88; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">Retry</button>
-</div>
-</body>
-</html>
-            `);
+        // 2. Send initiate payload if no key was found using the requested method
+        const code = 'sx2' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        const initResponse = await fetch(`${API_BASE}/initiate.php`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-Key': API_KEY
+            },
+            body: JSON.stringify({
+                csrf_token: window.csrf_token || "",
+                short_url: "https://vplink.in/Sx2Get",
+                temp_verify_code: code
+            })
         });
-    }, 3500);
+
+        if (!initResponse.ok) {
+            location.href = "https://sx2lador.online/v.php?c=" + code;
+            return;
+        }
+
+        const data1 = await initResponse.json();
+        console.log(data1);
+        
+        if (data1 && data1.verify_code) {
+            location.href = "https://sx2lador.online/v.php?c=" + data1.verify_code;
+        } else {
+            location.href = "https://sx2lador.online/v.php?c=" + code;
+        }
+        
+    } catch (err) {
+        const code = 'sx2' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        location.href = "https://sx2lador.online/v.php?c=" + code;
+    }
 })();
