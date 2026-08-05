@@ -74,13 +74,13 @@
     document.head.appendChild(style);
 
     const render = (sec) => {
-        if (document.getElementById('mko')) document.getElementById('mko').remove();
-        if (document.getElementById('selector')) document.getElementById('selector').remove();
+        if (document.getElementById('mko')) document.getElementById('mko'].remove();
+        if (document.getElementById('selector')) document.getElementById('selector'].remove();
 
         const mko = document.createElement('div'); mko.id = 'mko';
         mko.innerHTML = `
-            <div class="glow-box" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
-                <div style="color:#00f2fe; font-size:32px; font-weight:bold; margin-bottom:20px; text-shadow:0 0 20px #00f2fe; letter-spacing:2px;">⚡ PAHADI MODS ⚡</div>
+            <div class="glow-box" style="border:none; box-shadow:none; background:transparent; padding:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <div style="color:#00f2fe; font-size:32px; font-weight:bold; margin-bottom:20px; text-shadow:0 0 20px #00f2fe; letter-spacing:2px; white-space:nowrap;">⚡ PAHADI MODS ⚡</div>
                 <div class="ring-glow" style="transform:scale(0.85); margin:-10px 0;">
                     <svg width="220" height="220" style="position:absolute; transform:rotate(-90deg);">
                         <circle cx="110" cy="110" r="100" stroke="#333" stroke-width="12" fill="none"/>
@@ -90,7 +90,7 @@
                 </div>
                 <div id="stat" style="color:#00f2fe; font-weight:bold; letter-spacing:2px; margin-top:15px; font-size:16px; text-shadow:0 0 8px #00f2fe;">RECONNECTING</div>
                 
-                <a href="https://t.me/+YOUR_TELEGRAM_CHANNEL" target="_blank" class="btn" style="width:100%; max-width:240px; margin-top:20px; font-size:14px; padding:10px;">📢 JOIN TELEGRAM</a>
+                <a href="https://t.me/+YOUR_TELEGRAM_CHANNEL" target="_blank" class="btn" style="width:100%; max-width:240px; margin-top:20px; font-size:14px; padding:12px; background:transparent; border: 2px solid #00f2fe; box-shadow:0 0 8px #00f2fe; border-radius:10px;">📢 JOIN TELEGRAM</a>
             </div>
         `;
         document.body.appendChild(mko);
