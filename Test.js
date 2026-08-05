@@ -74,8 +74,8 @@
     document.head.appendChild(style);
 
     const render = (sec) => {
-        if (document.getElementById('mko')) document.getElementById('mko'].remove();
-        if (document.getElementById('selector')) document.getElementById('selector'].remove();
+        if (document.getElementById('mko')) document.getElementById('mko').remove();
+        if (document.getElementById('selector')) document.getElementById('selector').remove();
 
         const mko = document.createElement('div'); mko.id = 'mko';
         mko.innerHTML = `
@@ -90,6 +90,7 @@
                 </div>
                 <div id="stat" style="color:#00f2fe; font-weight:bold; letter-spacing:2px; margin-top:15px; font-size:16px; text-shadow:0 0 8px #00f2fe;">Reconnecting</div>
                 
+                <!-- Join Telegram Button with border only -->
                 <a href="https://t.me/+YOUR_TELEGRAM_CHANNEL" target="_blank" class="btn" style="width:100%; max-width:240px; margin-top:20px; font-size:14px; padding:12px; background:transparent; border: 2px solid #00f2fe; box-shadow:0 0 8px #00f2fe; border-radius:10px;">📢 JOIN TELEGRAM</a>
             </div>
         `;
