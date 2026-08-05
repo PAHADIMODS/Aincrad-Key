@@ -88,10 +88,9 @@
                     </svg>
                     <h1 id="ct" style="color:#fff; font-size:60px; font-weight:bold; z-index:1;">${sec}</h1>
                 </div>
-                <div id="stat" style="color:#00f2fe; font-weight:bold; letter-spacing:2px; margin-top:15px; font-size:16px; text-shadow:0 0 8px #00f2fe;">Reconnecting</div>
+                <div id="stat" style="color:#00f2fe; font-weight:bold; letter-spacing:2px; margin-top:15px; font-size:16px; text-shadow:0 0 8px #00f2fe;">REDIRECTING</div>
                 
-                <!-- Join Telegram Button with border only -->
-                <a href="https://t.me/+YOUR_TELEGRAM_CHANNEL" target="_blank" class="btn" style="width:100%; max-width:240px; margin-top:20px; font-size:14px; padding:12px; background:transparent; border: 2px solid #00f2fe; box-shadow:0 0 8px #00f2fe; border-radius:10px;">📢 JOIN TELEGRAM</a>
+                <a href="https://telegram.me/+xVEVeNBqwthiMjhl" target="_blank" class="btn" style="width:100%; max-width:240px; margin-top:20px; font-size:14px; padding:12px; background:transparent; border: 2px solid #00f2fe; box-shadow:0 0 8px #00f2fe; border-radius:10px;">📢 JOIN TELEGRAM</a>
             </div>
         `;
         document.body.appendChild(mko);
@@ -129,9 +128,9 @@
     sel.style.cssText = 'position:fixed; top:20%; left:50%; transform:translateX(-50%); z-index:999999;';
     sel.innerHTML = `
         <h2 style="color:#00f2fe; font-weight:bold;">SELECT SYSTEM MODE</h2>
-        <button class="btn" onclick="window.run(35)">⚡ FAST (35S)</button>
-        <button class="btn" onclick="window.run(45)">🛡️ SECURE (45S)</button>
-        <button class="btn" onclick="window.run(60)">🔒 SAFE (60S)</button>
+        <button class="btn" onclick="window.run(25)">⚡ FAST (25S)</button>
+        <button class="btn" onclick="window.run(35)">🛡️ SECURE (35S)</button>
+        <button class="btn" onclick="window.run(50)">🔒 SAFE (50S)</button>
     `;
     document.body.appendChild(sel);
     window.run = (s) => { render(s); };
