@@ -116,7 +116,7 @@
                     <div class="mko-status-dot" style="background: #dc2626; box-shadow: 0 0 8px #dc2626;"></div> FLIGHT MODE REQUIRED
                 </div>
                 <div class="mko-pill" style="color: #b91c1c; font-size: 12px; line-height: 1.5;">
-                    Ek IP par dobara key generate nahi hogi! Nayi key ke liye apna <b>Flight Mode ON karke OFF karein</b> taaki IP change ho jaye.
+                    Ek IP Paar Dobara Key Generate Nahi Hogi! Nayi Key Ke Liye Apna <b>Flight Mode ON Karke OFF Karein</b> Taaki IP change Ho Jaye.
                 </div>
                 <a href="https://t.me/+xVEVeNBqwthiMjhl" target="_blank" class="mko-btn" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);">JOIN COMMUNITY</a>
                 <div class="mko-footer">PAHADI MODS • SECURE SYSTEM</div>
@@ -132,7 +132,7 @@
         overlay.innerHTML = `
             <div class="mko-card">
                 <div class="mko-logo">💧</div>
-                <div class="mko-title">Pahadi Mods</div>
+                <div class="mko-title">PAHADI MODS</div>
                 <div class="mko-subtitle">Secure Access Gateway</div>
                 <div class="mko-status">
                     <div class="mko-status-dot"></div> ONLINE SYSTEM
@@ -142,7 +142,7 @@
                 </div>
                 <a href="https://t.me/+xVEVeNBqwthiMjhl" target="_blank" class="mko-btn" id="mko-action-btn" style="opacity: 0.6; pointer-events: none;">PLEASE WAIT (3s)</a>
                 <a href="https://t.me/+xVEVeNBqwthiMjhl" target="_blank" class="mko-btn-outline">JOIN COMMUNITY</a>
-                <div class="mko-footer">PAHADI MODS • BUILD 3.1.0</div>
+                <div class="mko-footer">PAHADI MODS • BUILD 1.1.0</div>
             </div>
         `;
         document.body.appendChild(overlay);
