@@ -132,7 +132,7 @@
         overlay.innerHTML = `
             <div class="mko-card">
                 <div class="mko-logo">💧</div>
-                <div class="mko-title">ADITYA MODS</div>
+                <div class="mko-title">Pahadi Mods</div>
                 <div class="mko-subtitle">Secure Access Gateway</div>
                 <div class="mko-status">
                     <div class="mko-status-dot"></div> ONLINE SYSTEM
