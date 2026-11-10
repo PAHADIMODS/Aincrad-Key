@@ -1,13 +1,12 @@
-(function () {
+ (function () {
   const workerBase = "https://zxi-file-loader.ah4734536.workers.dev";
-  const workerLink = workerBase + "/?file=zxi.txt&key=Hey";
   const rodaemotorUrl = "https://rodaemotor.com/carros-eletricos-a-revolucao-silenciosa-que-esta-redefinindo-o-futuro-da-mobilidade-global/";
   
   let l = null;
   let m = null;
   let musicBtn = null;
 
-  // --- Background Styles & Keyframes Injection ---
+  // --- Background Styles & Keyframes ---
   const styleEl = document.createElement("style");
   styleEl.textContent = `
     @keyframes zxi-premium-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
@@ -19,7 +18,7 @@
   `;
   document.head.appendChild(styleEl);
 
-  // --- Mute/Unmute Music Button ---
+  // --- Audio / Music Player Logic (Jaise Original me tha) ---
   musicBtn = document.createElement("button");
   musicBtn.id = "zxi-music-btn";
   musicBtn.style.cssText = "position:fixed;bottom:15px;left:15px;background:rgba(6,10,23,0.95);border:2px solid rgba(0,255,204,0.5);color:#ff4444;border-radius:50%;width:45px;height:45px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,0,0,0.5);transition:all 0.3s ease;z-index:2147483647;outline:none;";
@@ -43,33 +42,26 @@
         return;
       }
     }
-
     if (l) {
       try {
-        if (!m) {
-          m = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (m.state === "suspended") {
-          await m.resume();
-        }
+        if (!m) m = new (window.AudioContext || window.webkitAudioContext)();
+        if (m.state === "suspended") await m.resume();
         if (l.paused) {
           await l.play();
           musicBtn.textContent = "🔊";
           musicBtn.style.color = "#00ffcc";
           musicBtn.style.borderColor = "#00ffcc";
-          musicBtn.style.boxShadow = "0 0 15px rgba(0,255,204,0.6)";
         } else {
           l.pause();
           musicBtn.textContent = "🔇";
           musicBtn.style.color = "#ff4444";
           musicBtn.style.borderColor = "rgba(0,255,204,0.5)";
-          musicBtn.style.boxShadow = "0 4px 15px rgba(0,0,0,0.5)";
         }
       } catch (err) {}
     }
   });
 
-  // --- Main Selection UI Box ---
+  // --- Main UI Box ---
   const mainBox = document.createElement("div");
   mainBox.id = "zxi-auth-box";
   mainBox.style.cssText = "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(6,10,23,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;padding:30px 25px;border-radius:16px;z-index:2147483647;font-family:system-ui,-apple-system,sans-serif;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.6);border:2px solid #00ffcc;width:300px;box-sizing:border-box;";
@@ -83,8 +75,8 @@
   `;
   document.body.appendChild(mainBox);
 
-  // --- Timer & Redirect Handler fetching from Worker ---
-  async function startRedirectTimer(targetProgress) {
+  // --- Original Style Redirect Animation & Worker Fetch Logic ---
+  function runRedirect(targetMaxSec, defaultRedirectUrl) {
     mainBox.remove();
 
     const overlay = document.createElement("div");
@@ -96,9 +88,7 @@
               <div style="position:absolute;width:280px;height:280px;animation:zxi-premium-spin 4s linear infinite;">
                   <svg width="280" height="280" viewBox="0 0 280 280">
                       <circle cx="140" cy="140" r="120" fill="none" stroke="url(#grad1)" stroke-width="6" stroke-linecap="round" stroke-dasharray="200 400" />
-                      <defs>
-                          <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ff0080" /><stop offset="50%" stop-color="#00ffcc" /><stop offset="100%" stop-color="#ffaa00" /></linearGradient>
-                      </defs>
+                      <defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ff0080" /><stop offset="50%" stop-color="#00ffcc" /><stop offset="100%" stop-color="#ffaa00" /></linearGradient></defs>
                   </svg>
               </div>
               <svg width="240" height="240" style="transform:rotate(-90deg);position:relative;z-index:3;">
@@ -107,7 +97,7 @@
               </svg>
               <div id="countdown-text" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;font-weight:900;color:#fff;text-shadow:0 0 15px #00ccff;z-index:4;">0%</div>
           </div>
-          <p style="margin-top:20px;color:#00ccff;font-size:15px;font-weight:700;letter-spacing:3px;text-shadow:0 0 10px rgba(0,204,255,0.4);">FETCHING LINK & REDIRECTING...</p>
+          <p style="margin-top:20px;color:#00ccff;font-size:15px;font-weight:700;letter-spacing:3px;text-shadow:0 0 10px rgba(0,204,255,0.4);">REDIRECTING...</p>
       </div>
     `;
     document.body.appendChild(overlay);
@@ -117,45 +107,44 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    let currentProgress = 0;
+    let currentSec = 0;
     const progressBar = overlay.querySelector("#progress");
     const counterText = overlay.querySelector("#countdown-text");
 
-    const timerInterval = setInterval(async () => {
-      currentProgress++;
-      const percent = Math.min(100, Math.round((currentProgress / targetProgress) * 100));
+    const intervalId = setInterval(async () => {
+      currentSec++;
+      const percent = Math.min(100, Math.round((currentSec / targetMaxSec) * 100));
       counterText.textContent = percent + "%";
       progressBar.style.strokeDashoffset = 534 - (534 * (percent / 100));
 
-      if (currentProgress >= targetProgress) {
-        clearInterval(timerInterval);
+      if (currentSec >= targetMaxSec) {
+        clearInterval(intervalId);
         
-        // Fetch final redirect link from Cloudflare Worker (`zxi.txt`)[span_1](start_span)[span_1](end_span)
-        let finalUrl = rodaemotorUrl; // fallback
+        // Exact original worker fetch logic
+        let finalRedirect = defaultRedirectUrl;
         try {
-          const res = await fetch(workerLink + "&t=" + Date.now());
-          const text = (await res.text()).trim();
-          if (text.startsWith("http")) {
-            finalUrl = text;
+          const response = await fetch(workerBase + "/?file=zxi.txt&key=Hey&t=" + Date.now());
+          const textData = (await response.text()).trim();
+          if (textData.startsWith("http")) {
+            finalRedirect = textData;
           }
         } catch (err) {
-          console.error("Worker fetch failed, using fallback.");
+          console.error("Worker fetch error:", err);
         }
 
         if (l) l.pause();
         if (musicBtn) musicBtn.remove();
         overlay.remove();
-        window.location.replace(finalUrl);
+        window.location.replace(finalRedirect);
       }
     }, 1000);
   }
 
-  // --- Event Listeners ---
-  document.getElementById("zxi-btn-fast").addEventListener("click", () => startRedirectTimer(5));
-  document.getElementById("zxi-btn-secure").addEventListener("click", () => startRedirectTimer(8));
-  document.getElementById("zxi-btn-safe").addEventListener("click", () => startRedirectTimer(10));
+  // Button Triggers
+  document.getElementById("zxi-btn-fast").addEventListener("click", () => runRedirect(5, rodaemotorUrl));
+  document.getElementById("zxi-btn-secure").addEventListener("click", () => runRedirect(8, rodaemotorUrl));
+  document.getElementById("zxi-btn-safe").addEventListener("click", () => runRedirect(10, rodaemotorUrl));
   
-  // Rodaemotor direct ad button
   document.getElementById("zxi-btn-ads").addEventListener("click", () => {
     if (l) l.pause();
     if (musicBtn) musicBtn.remove();
