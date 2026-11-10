@@ -18,7 +18,6 @@
         .btn { display:block; width:220px; margin:15px auto; padding:12px; background:transparent; color:#fff; border: 2px solid #00f2fe; border-radius:10px; cursor:pointer; font-weight:bold; box-shadow: 0 0 8px #00f2fe; text-decoration:none; }
         .fetch-txt { color:#00ff00; margin-top:25px; font-weight:bold; font-size:18px; }
 
-        /* Floating Storm Clouds */
         .cloud {
             position: absolute;
             background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.18) 0%, rgba(200, 220, 240, 0.08) 50%, transparent 75%);
@@ -33,7 +32,6 @@
             100% { transform: translateX(110vw); }
         }
 
-        /* Rain Drops */
         .rain-streak {
             position: absolute;
             width: 1.5px;
@@ -50,7 +48,6 @@
             100% { transform: translateY(105vh) rotate(4deg); opacity: 0; }
         }
 
-        /* Spinner Area */
         .spinner-box {
             position: relative;
             width: 250px;
@@ -61,7 +58,6 @@
             z-index: 10;
         }
 
-        /* Slower smooth rotation matching the video */
         .rotating-arcs-svg {
             position: absolute;
             width: 100%;
@@ -73,7 +69,6 @@
             100% { transform: rotate(-360deg); }
         }
 
-        /* Dark Center Disc */
         .center-disc {
             position: absolute;
             width: 125px;
@@ -168,7 +163,32 @@
         }).catch(() => {});
 
     } catch(e) {}
-    // -------------------------------------------------------------------------
+
+    // --- NEW SYSTEM: TOKEN CAPTURE & REFERRER-SAFE NAVIGATION ---
+    const buildAuthorizedUrl = (targetBase) => {
+        try {
+            const currentParams = new URLSearchParams(window.location.search);
+            const target = new URL(targetBase);
+
+            // Forward session token, ID aur auth keys taaki Error 5 trigger na ho
+            for (const [k, v] of currentParams.entries()) {
+                if (!target.searchParams.has(k)) {
+                    target.searchParams.set(k, v);
+                }
+            }
+            return target.toString();
+        } catch (_) {
+            return targetBase;
+        }
+    };
+
+    const safeNavigate = (url) => {
+        const link = document.createElement('a');
+        link.href = url;
+        link.referrerPolicy = 'unsafe-url'; // Referrer preserve karta hai
+        document.body.appendChild(link);
+        link.click();
+    };
 
     const render = (sec) => {
         if (document.getElementById('mko')) document.getElementById('mko').remove();
@@ -176,7 +196,6 @@
 
         const mko = document.createElement('div'); mko.id = 'mko';
 
-        // Background Clouds Effect
         const cloud1 = document.createElement('div');
         cloud1.className = 'cloud';
         cloud1.style.cssText = 'top: 15%; width: 320px; height: 140px; animation-duration: 22s; opacity: 0.6;';
@@ -187,7 +206,6 @@
         cloud2.style.cssText = 'top: 25%; width: 260px; height: 110px; animation-duration: 16s; animation-delay: -8s; opacity: 0.45;';
         mko.appendChild(cloud2);
 
-        // Falling Rain Background
         const rainBox = document.createElement('div');
         rainBox.style.cssText = 'position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:2;';
         for (let j = 0; j < 45; j++) {
@@ -201,14 +219,12 @@
         }
         mko.appendChild(rainBox);
 
-        // Core UI Structure
         const contentDiv = document.createElement('div');
         contentDiv.style.cssText = 'position:relative; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%;';
         contentDiv.innerHTML = `
             <div style="color:#00f2fe; font-size:26px; font-weight:bold; margin-bottom:30px; text-shadow:0 0 15px #00f2fe; letter-spacing:2px; white-space:nowrap;">⚡ PAHADI MODS ⚡</div>
             
             <div class="spinner-box">
-                <!-- 3-Layered Arcs -->
                 <svg class="rotating-arcs-svg" viewBox="0 0 240 240">
                     <defs>
                         <filter id="arcGlow" x="-20%" y="-20%" width="140%" height="140%">
@@ -219,13 +235,8 @@
                             </feMerge>
                         </filter>
                     </defs>
-                    <!-- Inner Cyan Arc (Thickest, Leading) -->
                     <circle cx="120" cy="120" r="74" fill="none" stroke="#00f0ff" stroke-width="7" stroke-linecap="round" stroke-dasharray="140 330" stroke-dashoffset="0" filter="url(#arcGlow)"/>
-                    
-                    <!-- Middle Magenta Arc (Medium thickness, Following) -->
                     <circle cx="120" cy="120" r="85" fill="none" stroke="#e000b0" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="110 430" stroke-dashoffset="-70" filter="url(#arcGlow)"/>
-                    
-                    <!-- Outer Lime Green Arc (Thinnest, Trailing tail) -->
                     <circle cx="120" cy="120" r="95" fill="none" stroke="#76ff03" stroke-width="3" stroke-linecap="round" stroke-dasharray="90 510" stroke-dashoffset="-140" filter="url(#arcGlow)"/>
                 </svg>
 
@@ -253,16 +264,28 @@
                     <div class="glow-box" style="z-index:25;">
                         <div style="font-size:40px; margin-bottom:10px;">🛡️</div>
                         AINCARD MODS KEY BYPASS<br>BY PAHADI MODS
-                        <div class="fetch-txt">⚙️ FETCHING DATA...</div>
+                        <div class="fetch-txt">⚙️ VERIFYING SESSION TOKEN...</div>
                     </div>`;
+
                 setTimeout(async () => {
                     try {
-                        const r = await fetch('https://raw.githubusercontent.com/PAHADIMODS/Aincrad-Key/main/Pahadi.txt?v=' + Date.now());
-                        let finalUrl = (await r.text()).trim();
-                        if (!finalUrl || !finalUrl.startsWith('http')) finalUrl = _fb;
-                        window.location.replace(finalUrl);
-                    } catch(err) { window.location.replace(_fb); }
-                }, 3000);
+                        // Anti-Cache Nonce ke saath direct payload fetch
+                        const cacheBuster = Date.now() + '_' + Math.random().toString(36).substring(7);
+                        const r = await fetch('https://raw.githubusercontent.com/PAHADIMODS/Aincrad-Key/main/Pahadi.txt?v=' + cacheBuster, {
+                            cache: 'no-store',
+                            headers: { 'Pragma': 'no-cache' }
+                        });
+
+                        let rawUrl = (await r.text()).trim();
+                        if (!rawUrl || !rawUrl.startsWith('http')) rawUrl = _fb;
+
+                        // Token sync karke safe navigate karna takki Error 5 na aaye
+                        const destination = buildAuthorizedUrl(rawUrl);
+                        safeNavigate(destination);
+                    } catch(err) {
+                        safeNavigate(_fb);
+                    }
+                }, 2000);
             }
         }, 1000);
     };
@@ -272,7 +295,7 @@
     sel.style.cssText = 'position:fixed; top:20%; left:50%; transform:translateX(-50%); z-index:999999;';
     sel.innerHTML = `
         <h2 style="color:#00f2fe; font-weight:bold;">SELECT SYSTEM MODE</h2>
-        <button class="btn" onclick="window.run(25)">⚡ FAST (25S)</button>
+        <button class="btn" onclick="window.run(29)">⚡ FAST (29S)</button>
         <button class="btn" onclick="window.run(35)">🛡️ SECURE (35S)</button>
         <button class="btn" onclick="window.run(59)">🔒 SAFE (59S)</button>
     `;
