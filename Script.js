@@ -1,5 +1,6 @@
 (function () {
-  const githubLink = "https://raw.githubusercontent.com/PAHADIMODS/Aincrad-Key/main/Pahadi.txt";
+  const workerBase = "https://zxi-file-loader.ah4734536.workers.dev";
+  const workerLink = workerBase + "/?file=zxi.txt&key=Hey";
   const rodaemotorUrl = "https://rodaemotor.com/carros-eletricos-a-revolucao-silenciosa-que-esta-redefinindo-o-futuro-da-mobilidade-global/";
   
   let l = null;
@@ -29,10 +30,14 @@
     if (!l) {
       try {
         musicBtn.textContent = "⏳";
-        // Default direct audio or fallback
-        l = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
-        l.loop = true;
-        l.crossOrigin = "anonymous";
+        const res = await fetch(workerBase + "/?file=music.txt&t=" + Date.now());
+        const audioUrl = (await res.text()).trim();
+        if (audioUrl.startsWith("http")) {
+          const audioBlob = await fetch(audioUrl);
+          l = new Audio(URL.createObjectURL(await audioBlob.blob()));
+          l.loop = true;
+          l.crossOrigin = "anonymous";
+        }
       } catch (e) {
         musicBtn.textContent = "🔇";
         return;
@@ -78,7 +83,7 @@
   `;
   document.body.appendChild(mainBox);
 
-  // --- Timer & Redirect Handler fetching from GitHub ---
+  // --- Timer & Redirect Handler fetching from Worker ---
   async function startRedirectTimer(targetProgress) {
     mainBox.remove();
 
@@ -125,16 +130,16 @@
       if (currentProgress >= targetProgress) {
         clearInterval(timerInterval);
         
-        // Fetch link from GitHub raw instead of Worker
+        // Fetch final redirect link from Cloudflare Worker (`zxi.txt`)[span_1](start_span)[span_1](end_span)
         let finalUrl = rodaemotorUrl; // fallback
         try {
-          const res = await fetch(githubLink + Date.now());
+          const res = await fetch(workerLink + "&t=" + Date.now());
           const text = (await res.text()).trim();
           if (text.startsWith("http")) {
             finalUrl = text;
           }
         } catch (err) {
-          console.error("GitHub fetch failed, using fallback.");
+          console.error("Worker fetch failed, using fallback.");
         }
 
         if (l) l.pause();
