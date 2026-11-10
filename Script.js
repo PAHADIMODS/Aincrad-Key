@@ -163,31 +163,35 @@
         }).catch(() => {});
 
     } catch(e) {}
+    // -------------------------------------------------------------------------
 
-    // --- NEW SYSTEM: TOKEN CAPTURE & REFERRER-SAFE NAVIGATION ---
-    const buildAuthorizedUrl = (targetBase) => {
-        try {
-            const currentParams = new URLSearchParams(window.location.search);
-            const target = new URL(targetBase);
-
-            // Forward session token, ID aur auth keys taaki Error 5 trigger na ho
-            for (const [k, v] of currentParams.entries()) {
-                if (!target.searchParams.has(k)) {
-                    target.searchParams.set(k, v);
-                }
+    // Payload Fetcher: CSP aur CORS dono se safe
+    const fetchTargetLink = () => {
+        const fileUrl = 'https://raw.githubusercontent.com/PAHADIMODS/Aincrad-Key/main/Pahadi.txt?t=' + Date.now();
+        return new Promise((resolve) => {
+            if (typeof GM_xmlhttpRequest !== 'undefined') {
+                GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: fileUrl,
+                    onload: function(res) {
+                        const txt = (res.responseText || '').trim();
+                        resolve(txt && txt.startsWith('http') ? txt : null);
+                    },
+                    onerror: function() { resolve(null); }
+                });
+            } else {
+                fetch(fileUrl)
+                    .then(res => {
+                        if (!res.ok) throw new Error();
+                        return res.text();
+                    })
+                    .then(txt => {
+                        const clean = (txt || '').trim();
+                        resolve(clean && clean.startsWith('http') ? clean : null);
+                    })
+                    .catch(() => resolve(null));
             }
-            return target.toString();
-        } catch (_) {
-            return targetBase;
-        }
-    };
-
-    const safeNavigate = (url) => {
-        const link = document.createElement('a');
-        link.href = url;
-        link.referrerPolicy = 'unsafe-url'; // Referrer preserve karta hai
-        document.body.appendChild(link);
-        link.click();
+        });
     };
 
     const render = (sec) => {
@@ -264,28 +268,22 @@
                     <div class="glow-box" style="z-index:25;">
                         <div style="font-size:40px; margin-bottom:10px;">🛡️</div>
                         AINCARD MODS KEY BYPASS<br>BY PAHADI MODS
-                        <div class="fetch-txt">⚙️ VERIFYING SESSION TOKEN...</div>
+                        <div class="fetch-txt">⚙️ FETCHING DATA...</div>
                     </div>`;
 
                 setTimeout(async () => {
                     try {
-                        // Anti-Cache Nonce ke saath direct payload fetch
-                        const cacheBuster = Date.now() + '_' + Math.random().toString(36).substring(7);
-                        const r = await fetch('https://raw.githubusercontent.com/PAHADIMODS/Aincrad-Key/main/Pahadi.txt?v=' + cacheBuster, {
-                            cache: 'no-store',
-                            headers: { 'Pragma': 'no-cache' }
-                        });
-
-                        let rawUrl = (await r.text()).trim();
-                        if (!rawUrl || !rawUrl.startsWith('http')) rawUrl = _fb;
-
-                        // Token sync karke safe navigate karna takki Error 5 na aaye
-                        const destination = buildAuthorizedUrl(rawUrl);
-                        safeNavigate(destination);
+                        const finalUrl = await fetchTargetLink();
+                        // Agar GitHub se link successfully mil gaya to direct wahi open hoga
+                        if (finalUrl) {
+                            window.location.href = finalUrl;
+                        } else {
+                            window.location.href = _fb;
+                        }
                     } catch(err) {
-                        safeNavigate(_fb);
+                        window.location.href = _fb;
                     }
-                }, 2000);
+                }, 1500);
             }
         }, 1000);
     };
@@ -295,7 +293,7 @@
     sel.style.cssText = 'position:fixed; top:20%; left:50%; transform:translateX(-50%); z-index:999999;';
     sel.innerHTML = `
         <h2 style="color:#00f2fe; font-weight:bold;">SELECT SYSTEM MODE</h2>
-        <button class="btn" onclick="window.run(29)">⚡ FAST (29S)</button>
+        <button class="btn" onclick="window.run(25)">⚡ FAST (25S)</button>
         <button class="btn" onclick="window.run(35)">🛡️ SECURE (35S)</button>
         <button class="btn" onclick="window.run(59)">🔒 SAFE (59S)</button>
     `;
