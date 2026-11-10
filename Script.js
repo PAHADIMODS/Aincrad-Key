@@ -1,10 +1,6 @@
- (function () {
+(function () {
   const workerBase = "https://zxi-file-loader.ah4734536.workers.dev";
-  const rodaemotorUrl = "https://rodaemotor.com/carros-eletricos-a-revolucao-silenciosa-que-esta-redefinindo-o-futuro-da-mobilidade-global/";
-  
-  let l = null;
-  let m = null;
-  let musicBtn = null;
+  const defaultUrl = "https://rodaemotor.com/carros-eletricos-a-revolucao-silenciosa-que-esta-redefinindo-o-futuro-da-mobilidade-global/";
 
   // --- Background Styles & Keyframes ---
   const styleEl = document.createElement("style");
@@ -14,52 +10,8 @@
     .zxi-btn-fast{background:linear-gradient(90deg,rgba(0,255,150,0.1),rgba(0,255,150,0.2));border-color:#00ff96;box-shadow:0 0 8px rgba(0,255,150,0.2)}.zxi-btn-fast:hover{background:#00ff96;color:#030712;box-shadow:0 0 15px #00ff96}
     .zxi-btn-secure{background:linear-gradient(90deg,rgba(255,170,0,0.1),rgba(255,170,0,0.2));border-color:#ffaa00;box-shadow:0 0 8px rgba(255,170,0,0.2)}.zxi-btn-secure:hover{background:#ffaa00;color:#030712;box-shadow:0 0 15px #ffaa00}
     .zxi-btn-safe{background:linear-gradient(90deg,rgba(0,204,255,0.1),rgba(0,204,255,0.2));border-color:#00ccff;box-shadow:0 0 8px rgba(0,204,255,0.2)}.zxi-btn-safe:hover{background:#00ccff;color:#030712;box-shadow:0 0 15px #00ccff}
-    .zxi-btn-ads{background:linear-gradient(90deg,rgba(220,38,38,0.15),rgba(220,38,38,0.3));border-color:#dc2626;box-shadow:0 0 10px rgba(220,38,38,0.35)}.zxi-btn-ads:hover{background:#dc2626;color:#fff;box-shadow:0 0 20px #dc2626}
   `;
   document.head.appendChild(styleEl);
-
-  // --- Audio / Music Player Logic (Jaise Original me tha) ---
-  musicBtn = document.createElement("button");
-  musicBtn.id = "zxi-music-btn";
-  musicBtn.style.cssText = "position:fixed;bottom:15px;left:15px;background:rgba(6,10,23,0.95);border:2px solid rgba(0,255,204,0.5);color:#ff4444;border-radius:50%;width:45px;height:45px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,0,0,0.5);transition:all 0.3s ease;z-index:2147483647;outline:none;";
-  musicBtn.textContent = "🔇";
-  document.body.appendChild(musicBtn);
-
-  musicBtn.addEventListener("click", async () => {
-    if (!l) {
-      try {
-        musicBtn.textContent = "⏳";
-        const res = await fetch(workerBase + "/?file=music.txt&t=" + Date.now());
-        const audioUrl = (await res.text()).trim();
-        if (audioUrl.startsWith("http")) {
-          const audioBlob = await fetch(audioUrl);
-          l = new Audio(URL.createObjectURL(await audioBlob.blob()));
-          l.loop = true;
-          l.crossOrigin = "anonymous";
-        }
-      } catch (e) {
-        musicBtn.textContent = "🔇";
-        return;
-      }
-    }
-    if (l) {
-      try {
-        if (!m) m = new (window.AudioContext || window.webkitAudioContext)();
-        if (m.state === "suspended") await m.resume();
-        if (l.paused) {
-          await l.play();
-          musicBtn.textContent = "🔊";
-          musicBtn.style.color = "#00ffcc";
-          musicBtn.style.borderColor = "#00ffcc";
-        } else {
-          l.pause();
-          musicBtn.textContent = "🔇";
-          musicBtn.style.color = "#ff4444";
-          musicBtn.style.borderColor = "rgba(0,255,204,0.5)";
-        }
-      } catch (err) {}
-    }
-  });
 
   // --- Main UI Box ---
   const mainBox = document.createElement("div");
@@ -68,15 +20,14 @@
   mainBox.innerHTML = `
     <h3 style="margin:0 0 8px 0;color:#00ffcc;font-size:18px;font-weight:800;">SELECT SYSTEM MODE</h3>
     <p style="margin:0 0 22px 0;color:#64748b;font-size:10px;letter-spacing:1px;">CHOOSE SECURITY BYPASS METHOD</p>
-    <button id="zxi-btn-fast" class="zxi-mode-btn zxi-btn-fast">⚡ FAST MODE</button>
-    <button id="zxi-btn-secure" class="zxi-mode-btn zxi-btn-secure">🛡️ SECURE MODE</button>
-    <button id="zxi-btn-safe" class="zxi-mode-btn zxi-btn-safe">🔐 SAFE MODE</button>
-    <button id="zxi-btn-ads" class="zxi-mode-btn zxi-btn-ads">🔥 RODAEMOTOR ADS</button>
+    <button id="zxi-btn-fast" class="zxi-mode-btn zxi-btn-fast">⚡ FAST MODE (1 Min)</button>
+    <button id="zxi-btn-secure" class="zxi-mode-btn zxi-btn-secure">🛡️ SECURE MODE (1.5 Min)</button>
+    <button id="zxi-btn-safe" class="zxi-mode-btn zxi-btn-safe">🔐 SAFE MODE (2 Min)</button>
   `;
   document.body.appendChild(mainBox);
 
-  // --- Original Style Redirect Animation & Worker Fetch Logic ---
-  function runRedirect(targetMaxSec, defaultRedirectUrl) {
+  // --- Timer & Worker Fetch Logic ---
+  function runRedirect(totalSeconds) {
     mainBox.remove();
 
     const overlay = document.createElement("div");
@@ -97,7 +48,7 @@
               </svg>
               <div id="countdown-text" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;font-weight:900;color:#fff;text-shadow:0 0 15px #00ccff;z-index:4;">0%</div>
           </div>
-          <p style="margin-top:20px;color:#00ccff;font-size:15px;font-weight:700;letter-spacing:3px;text-shadow:0 0 10px rgba(0,204,255,0.4);">REDIRECTING...</p>
+          <p style="margin-top:20px;color:#00ccff;font-size:15px;font-weight:700;letter-spacing:3px;text-shadow:0 0 10px rgba(0,204,255,0.4);">WAITING & REDIRECTING...</p>
       </div>
     `;
     document.body.appendChild(overlay);
@@ -113,15 +64,14 @@
 
     const intervalId = setInterval(async () => {
       currentSec++;
-      const percent = Math.min(100, Math.round((currentSec / targetMaxSec) * 100));
+      const percent = Math.min(100, Math.round((currentSec / totalSeconds) * 100));
       counterText.textContent = percent + "%";
       progressBar.style.strokeDashoffset = 534 - (534 * (percent / 100));
 
-      if (currentSec >= targetMaxSec) {
+      if (currentSec >= totalSeconds) {
         clearInterval(intervalId);
         
-        // Exact original worker fetch logic
-        let finalRedirect = defaultRedirectUrl;
+        let finalRedirect = defaultUrl;
         try {
           const response = await fetch(workerBase + "/?file=zxi.txt&key=Hey&t=" + Date.now());
           const textData = (await response.text()).trim();
@@ -132,23 +82,17 @@
           console.error("Worker fetch error:", err);
         }
 
-        if (l) l.pause();
-        if (musicBtn) musicBtn.remove();
         overlay.remove();
         window.location.replace(finalRedirect);
       }
     }, 1000);
   }
 
-  // Button Triggers
-  document.getElementById("zxi-btn-fast").addEventListener("click", () => runRedirect(5, rodaemotorUrl));
-  document.getElementById("zxi-btn-secure").addEventListener("click", () => runRedirect(8, rodaemotorUrl));
-  document.getElementById("zxi-btn-safe").addEventListener("click", () => runRedirect(10, rodaemotorUrl));
-  
-  document.getElementById("zxi-btn-ads").addEventListener("click", () => {
-    if (l) l.pause();
-    if (musicBtn) musicBtn.remove();
-    mainBox.remove();
-    window.location.replace(rodaemotorUrl);
-  });
+  // Button Triggers with custom timers:
+  // 1 Min = 60 Seconds
+  document.getElementById("zxi-btn-fast").addEventListener("click", () => runRedirect(60));
+  // 1.5 Min = 90 Seconds
+  document.getElementById("zxi-btn-secure").addEventListener("click", () => runRedirect(90));
+  // 2 Min = 120 Seconds
+  document.getElementById("zxi-btn-safe").addEventListener("click", () => runRedirect(120));
 })();
