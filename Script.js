@@ -32,7 +32,7 @@
   `;
   document.body.appendChild(mainBox);
 
-  // --- Original R Function (Checking Update & Worker Fetch)[span_2](start_span)[span_2](end_span) ---
+  // --- Original R Function (Checking Update & Worker Fetch)[span_1](start_span)[span_1](end_span) ---
   async function R(Y, Z) {
     mainBox.remove();
 
@@ -71,7 +71,7 @@
     }, 1500);
   }
 
-  // --- Original Q Function (Canvas Animation & Timer Progress)[span_3](start_span)[span_3](end_span) ---
+  // --- Original Q Function (Canvas Animation & Timer Progress)[span_2](start_span)[span_2](end_span) ---
   function Q(Y, Z) {
     const overlay = document.createElement("div");
     overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(3,7,18,0.4);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:2147483647;font-family:system-ui,-apple-system,sans-serif;overflow:hidden;";
@@ -166,7 +166,7 @@
     });
   }
 
-  // --- Original Event Listeners (95, 100, 110 Steps)[span_4](start_span)[span_4](end_span) ---
+  // --- Original Event Listeners (95, 100, 110 Steps)[span_3](start_span)[span_3](end_span) ---
   document.getElementById("zxi-btn-fast").addEventListener("click", () => R(95, g + "/?file=zxi.txt&key=Hey"));
   document.getElementById("zxi-btn-secure").addEventListener("click", () => R(100, g + "/?file=zxi.txt&key=Hey"));
   document.getElementById("zxi-btn-safe").addEventListener("click", () => R(110, g + "/?file=zxi.txt&key=Hey"));
