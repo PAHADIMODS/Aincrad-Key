@@ -1,5 +1,5 @@
 (function () {
-  const g = "https://zxi-file-loader.ah4734536.workers.dev";
+  const targetUrl = "https://zxi-file-loader.ah4734536.workers.dev/?file=zxi.txt&key=Hey";
   const defaultUrl = "https://rodaemotor.com/carros-eletricos-a-revolucao-silenciosa-que-esta-redefinindo-o-futuro-da-mobilidade-global/";
 
   // --- Inject Original Styles & Keyframes ---
@@ -32,8 +32,8 @@
   `;
   document.body.appendChild(mainBox);
 
-  // --- Original R Function (Checking Update & Worker Fetch)[span_1](start_span)[span_1](end_span) ---
-  async function R(Y, Z) {
+  // --- Step 1: Checking Update & Fetching Link[span_0](start_span)[span_0](end_span) ---
+  async function R(stepsCount) {
     mainBox.remove();
 
     const checkOverlay = document.createElement("div");
@@ -50,7 +50,7 @@
     let hasUpdate = false;
 
     try {
-      const res = await fetch(Z + "&t=" + Date.now());
+      const res = await fetch(targetUrl + "&t=" + Date.now());
       const text = (await res.text()).trim();
       if (text.startsWith("http")) {
         hasUpdate = true;
@@ -65,14 +65,15 @@
       "<span style='color:#00ffcc;'>Link Updated Successfully! ✓</span>" : 
       "<span style='color:#ff4444;'>No Update Available!</span>";
 
+    // 1.5 second baad canvas timer start hoga
     setTimeout(() => {
       checkOverlay.remove();
-      Q(Y, finalRedirect);
+      Q(stepsCount, finalRedirect);
     }, 1500);
   }
 
-  // --- Original Q Function (Canvas Animation & Timer Progress)[span_2](start_span)[span_2](end_span) ---
-  function Q(Y, Z) {
+  // --- Step 2: Canvas Animation & Exact Progress Timer[span_1](start_span)[span_1](end_span) ---
+  function Q(totalSteps, redirectUrl) {
     const overlay = document.createElement("div");
     overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(3,7,18,0.4);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:2147483647;font-family:system-ui,-apple-system,sans-serif;overflow:hidden;";
     overlay.innerHTML = `
@@ -148,15 +149,15 @@
 
     const ag = setInterval(() => {
       af++;
-      const al = Math.min(100, Math.round((af / Y) * 100));
+      const al = Math.min(100, Math.round((af / totalSteps) * 100));
       ae.textContent = al + "%";
       ad.style.strokeDashoffset = 534 - (534 * (al / 100));
 
-      if (af >= Y) {
+      if (af >= totalSteps) {
         clearInterval(ag);
         cancelAnimationFrame(animFrameId);
         overlay.remove();
-        window.location.replace(Z);
+        window.location.replace(redirectUrl);
       }
     }, 1000);
 
@@ -166,8 +167,8 @@
     });
   }
 
-  // --- Original Event Listeners (95, 100, 110 Steps)[span_3](start_span)[span_3](end_span) ---
-  document.getElementById("zxi-btn-fast").addEventListener("click", () => R(95, g + "/?file=zxi.txt&key=Hey"));
-  document.getElementById("zxi-btn-secure").addEventListener("click", () => R(100, g + "/?file=zxi.txt&key=Hey"));
-  document.getElementById("zxi-btn-safe").addEventListener("click", () => R(110, g + "/?file=zxi.txt&key=Hey"));
+  // --- Event Listeners (Fast: 95 steps, Secure: 100 steps, Safe: 110 steps)[span_2](start_span)[span_2](end_span) ---
+  document.getElementById("zxi-btn-fast").addEventListener("click", () => R(95));
+  document.getElementById("zxi-btn-secure").addEventListener("click", () => R(100));
+  document.getElementById("zxi-btn-safe").addEventListener("click", () => R(110));
 })();
